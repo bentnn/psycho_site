@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Psycho site
+{% endblock %}
+{% block content %}
+    <h1 style="color: #111111">Home</h1>
+{#    {{ graph|safe }}#}
+    <a href="{% url 'test_first' %}">тест на канал восприятия</a>
+    {% if res1 %}
+        <p>У вас уже audio = {{ res1.audio }}</p>
+    {% endif %}
+{% endblock %}

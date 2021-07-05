@@ -1,0 +1,21 @@
+<nav class="justify-content-center navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+<!--        <a class="navbar-brand" href="#"  class="img-fluid mx-auto" >HSE</a>-->
+        <span class="navbar-brand">HSE</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+<!--                <a class="nav-link" aria-current="page" href="#">Home</a>-->
+<!--                <a class="nav-link" href="#">Features</a>-->
+<!--                <a class="nav-link" href="#">Pricing</a>-->
+<!--                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
+                    <a class="nav-link {% if cur_page == 'home' %} active {% endif %}" href="{% url 'home' %}"><span class="material-icons">home</span></a>
+                    <a class="nav-link {% if cur_page == 'account' %} active {% endif %}" href="{% url 'account' %}"><span class="material-icons">person</span></a>
+                    <a class="nav-link {% if cur_page == 'statistics' %} active {% endif %}" href="{% url 'statistics' %}"><span class="material-icons">equalizer</span></a>
+                    <a class="nav-link" href="{% url 'signout' %}"><span class="material-icons">logout</span></a>
+            </div>
+        </div>
+    </div>
+</nav>

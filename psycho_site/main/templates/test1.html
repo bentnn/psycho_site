@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Psycho site
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Тест на канал восприятия</h2>
+        <br>
+        <h5>Инструкция к тесту: Прочитайте предлагаемые утверждения.
+            Выберите "Да", если Вы согласны с данным утверждением, и "Нет" - если не согласны.</h5>
+        <h5>Необходимо ответить на все вопросы.</h5>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            {% for i in questions %}
+                            <p>{{ i }}</p>
+                            <p>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio1" value="yes" required>
+                                <label class="form-check-label" for="inlineRadio1">да</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio2" value="no" required>
+                                <label class="form-check-label" for="inlineRadio2">нет</label>
+                            </div>
+                            </p>
+            {% endfor %}
+
+
+            <p><button type="submit" class="btn btn-dark">Отправить</button></p>
+        </form>
+        <p>{{ messege }}</p>
+        <p>{{ messege2 }}</p>
+        {% if res %}
+            <p>{{ res }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

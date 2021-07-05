@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Account
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>Персональная информация</h1>
+        <br>
+        <p class="fw-bold regular_text">Имя пользователя: </p>
+        <p class="regular_text"> {{ request.user.username }}</p>
+        <p class="fw-bold regular_text">Имя:</p>
+        <p class="regular_text">
+            {% if request.user.first_name %}
+                {{request.user.first_name }}
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <p class="fw-bold regular_text">Фамилия:</p>
+        <p class="regular_text">
+            {% if request.user.last_name %}
+                {{request.user.last_name }}
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <p class="fw-bold regular_text">Электронная почта:</p>
+        <p class="regular_text">
+            {% if request.user.email %}
+                {{request.user.email }}
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <a class="btn btn-dark regular_text" href="{% url 'change_password' %}">Сменить пароль</a>
+    </div>
+{% endblock %}
