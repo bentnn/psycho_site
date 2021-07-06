@@ -1,1 +1,4 @@
-узбеки - сила
+для запуска требуются
+python
+django
+matplotlib
