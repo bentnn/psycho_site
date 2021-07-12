@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Change info
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <br>
+        <h1 class="text_title">
+            Смена персональной информации
+        </h1>
+        <div>
+            <div>
+                <div>
+                    <br>
+                    <form method="post" style="max-width: 300px">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1"  class="form-label">Имя</label>
+                            <input name="first_name" class="form-control" id="exampleFormControlInput1" value="{{ request.user.first_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1"  class="form-label">Фамилия</label>
+                            <input name="last_name" class="form-control" id="exampleFormControlInput1" value="{{ request.user.last_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Адрес электронной почты</label>
+                            <input type="email" class="form-control" name="email" id="exampleFormControlInput1" value="{{ request.user.email }}">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

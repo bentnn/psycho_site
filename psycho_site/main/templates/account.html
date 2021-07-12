@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h1>Персональная информация</h1>
+        <h1>Мой профиль</h1>
         <br>
         <p class="fw-bold regular_text">Имя пользователя: </p>
         <p class="regular_text"> {{ request.user.username }}</p>
@@ -31,8 +31,11 @@
                 {{request.user.email }}
             {% else %}
                 -
+                <p>Укажите, пожалуйста, электронну почту. Она потребуется в том случае, если вы забудете пароль.</p>
             {% endif %}
         </p>
-        <a class="btn btn-dark regular_text" href="{% url 'change_password' %}">Сменить пароль</a>
+        <br>
+        <p><a class="btn btn-dark regular_text" href="{% url 'change_info' %}">Изменить персональные данные</a></p>
+        <p><a class="btn btn-dark regular_text" href="{% url 'change_password' %}">Сменить пароль</a></p>
     </div>
 {% endblock %}

@@ -6,23 +6,28 @@
 {% block content %}
     <h1 style="color: #111111">Home</h1>
 {#    {{ graph|safe }}#}
-    <a href="{% url 'test_first' %}">тест на канал восприятия</a>
+
+
+
+
+
+    <p><a href="{% url 'test_first' %}">тест на канал восприятия</a></p>
     {% if res.0 %}
         <p>У вас уже audio = {{ res.0.audio }}, visual = {{ res.0.visual }}, kinest = {{ res.0.kinest }}</p>
     {% endif %}
-    <a href="{% url 'test_second' %}">тест на тревожность</a>
+    <p><a href="{% url 'test_second' %}">тест на тревожность</a></p>
     {% if res.1 %}
         <p>У вас уже rt = {{ res.1.rt }}, lt = {{ res.1.lt }}</p>
     {% endif %}
-    <a href="{% url 'test_third' %}">шкала депрессии</a>
+    <p><a href="{% url 'test_third' %}">шкала депрессии</a></p>
     {% if res.2 %}
         <p>У вас уже ud = {{ res.2.ud }}</p>
     {% endif %}
-    <a href="{% url 'test_fourth' %}">Опросник САН</a>
+    <p><a href="{% url 'test_fourth' %}">Опросник САН</a></p>
     {% if res.3 %}
         <p>У вас уже activity = {{ res.3.activity }}, being = {{ res.3.being }}, mood = {{ res.3.mood }}</p>
     {% endif %}
-    <a href="{% url 'test_fifth' %}">Теста Г. Айзенка</a>
+    <p><a href="{% url 'test_fifth' %}">Теста Г. Айзенка</a></p>
     {% if res.4 %}
         <p>У вас уже sincerity = {{ res.4.sincerity }}, extrav = {{ res.4.extrav }}, neuro = {{ res.4.neuro }}</p>
     {% endif %}

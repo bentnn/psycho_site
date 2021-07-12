@@ -1,13 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group, User
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from django import forms
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
 from . import psycho_tests
 from .models import *
+
+#vrwcnwrxfxrnbmcw
 
 def can_i_let_him_in(request):
     return request.user.is_authenticated and not request.user.is_superuser
@@ -15,13 +20,13 @@ def can_i_let_him_in(request):
 
 # def return_graph():
 #
-#     x = np.arange(0,np.pi*8,.1)
+#     x = np.arange(0, np.pi*8, .1)
 #     y = np.sin(x)
 #
 #     plt.style.use('seaborn-dark-palette')
 #
 #     fig = plt.figure(dpi=2000)
-#     plt.plot(x,y)
+#     plt.plot(x, y)
 #
 #     imgdata = StringIO()
 #     fig.savefig(imgdata, format='svg', transparent=True)
@@ -39,22 +44,6 @@ def home(request):
     res[2] = Test3.objects.all().filter(user=request.user).last()
     res[3] = Test4.objects.all().filter(user=request.user).last()
     res[4] = Test5.objects.all().filter(user=request.user).last()
-    # res1 = Test1.objects.all().filter(user=request.user)
-    # res2 = Test2.objects.all().filter(user=request.user)
-    # res3 = Test3.objects.all().filter(user=request.user)
-    # print(res2[0].lt, res2[0].rt)
-    # if len(res1) == 0:
-    #     res1 = None
-    # else:
-    #     res1 = res1.last()
-    # if len(res2) == 0:
-    #     res2 = None
-    # else:
-    #     res2 = res2.last()
-    # if len(res3) == 0:
-    #     res3 = None
-    # else:
-    #     res3 = res3.last()
     return render(request, 'home.html', {'cur_page': 'home', 'res': res})
 
 
@@ -82,18 +71,33 @@ def login_view(request):
                 return redirect('home')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form' : form})
+    return render(request, 'login.html', {'form': form})
+
+
+def check_in_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            username = request.POST['username']
+            password = request.POST['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'check_in.html', {'form': form})
 
 
 def signout_view(request):
     logout(request)
     return redirect('login')
 
+
 def change_password(request):
     if not can_i_let_him_in(request):
         return redirect('login')
     messege = None
-    request.POST()
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -104,7 +108,69 @@ def change_password(request):
             messege = "Форма смены пароля невалидна"
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'change_password.html', {'form': form, 'messege' : messege})
+    return render(request, 'change_password.html', {'form': form, 'messege': messege})
+
+def change_info(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.email = email
+        request.user.save()
+        return redirect('account')
+
+    return render(request, 'change_info.html')
+
+def send_mail(user, new):
+    addr_from = "hse.tests@yandex.ru"
+    password = "ihoqgelsccaxmyha"
+    # addr_from = "anticovidbracelet@yandex.com"
+    # password  = "bisxbtrjucwaebfi"
+
+    msg = MIMEMultipart()
+    msg['From'] = addr_from
+    msg['To'] = user.email
+    msg['Subject'] = 'Информация смене пароля'
+
+    text = "Здравствуйте"
+    if user.first_name != "":
+        text += ", " + user.first_name
+    text += ". На сайте психологических тестов от высшей школы экономики была активирована функция 'восстановить пароль' для вашего аккаунта."
+    text += "\nВаш новый пароль: " + new + ". Вы сможете заменить его в вашем личном кабинете."
+    msg.attach(MIMEText(text, 'plain'))
+    try:
+        print("0")
+        server = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
+        print("01")
+        server.login(addr_from, password)
+        print("1")
+        server.sendmail(addr_from, user.email, msg.as_string())
+        print("2")
+        server.quit()
+        return 0
+    except:
+        return 1
+
+def forgot_password(request):
+    message = None
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        user = User.objects.all().filter(username=username, email=email)
+        if len(user) != 0:
+            password = User.objects.make_random_password()
+            user[0].set_password(password)
+            user[0].save()
+            res = send_mail(user[0], password)
+            message = "На указанный вами адрес отправлен новый пароль" + str(res)
+        else:
+            message = "Пользователь не найден"
+
+    return render(request, 'forgot_password.html', {'message': message})
 
 def test_first(request):
     if not can_i_let_him_in(request):
