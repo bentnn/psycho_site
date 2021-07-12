@@ -7,15 +7,23 @@
     <h1 style="color: #111111">Home</h1>
 {#    {{ graph|safe }}#}
     <a href="{% url 'test_first' %}">тест на канал восприятия</a>
-    {% if res1 %}
-        <p>У вас уже audio = {{ res1.audio }}, visual = {{ res1.visual }}, kinest = {{ res1.kinest }}</p>
+    {% if res.0 %}
+        <p>У вас уже audio = {{ res.0.audio }}, visual = {{ res.0.visual }}, kinest = {{ res.0.kinest }}</p>
     {% endif %}
     <a href="{% url 'test_second' %}">тест на тревожность</a>
-    {% if res2 %}
-        <p>У вас уже rt = {{ res2.rt }}, lt = {{ res2.lt }}</p>
+    {% if res.1 %}
+        <p>У вас уже rt = {{ res.1.rt }}, lt = {{ res.1.lt }}</p>
     {% endif %}
     <a href="{% url 'test_third' %}">шкала депрессии</a>
-    {% if res3 %}
-        <p>У вас уже ud = {{ res3.ud }}</p>
+    {% if res.2 %}
+        <p>У вас уже ud = {{ res.2.ud }}</p>
+    {% endif %}
+    <a href="{% url 'test_fourth' %}">Опросник САН</a>
+    {% if res.3 %}
+        <p>У вас уже activity = {{ res.3.activity }}, being = {{ res.3.being }}, mood = {{ res.3.mood }}</p>
+    {% endif %}
+    <a href="{% url 'test_fifth' %}">Теста Г. Айзенка</a>
+    {% if res.4 %}
+        <p>У вас уже sincerity = {{ res.4.sincerity }}, extrav = {{ res.4.extrav }}, neuro = {{ res.4.neuro }}</p>
     {% endif %}
 {% endblock %}

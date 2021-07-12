@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
 from . import psycho_tests
-from .models import Test1, Test2, Test3
+from .models import *
 
 def can_i_let_him_in(request):
     return request.user.is_authenticated and not request.user.is_superuser
@@ -33,23 +33,29 @@ def can_i_let_him_in(request):
 def home(request):
     if not can_i_let_him_in(request):
         return redirect('login')
-    res1 = Test1.objects.all().filter(user=request.user)
-    res2 = Test2.objects.all().filter(user=request.user)
-    res3 = Test3.objects.all().filter(user=request.user)
-    print(res2[0].lt, res2[0].rt)
-    if len(res1) == 0:
-        res1 = None
-    else:
-        res1 = res1[0]
-    if len(res2) == 0:
-        res2 = None
-    else:
-        res2 = res2[0]
-    if len(res3) == 0:
-        res3 = None
-    else:
-        res3 = res3[0]
-    return render(request, 'home.html', {'cur_page': 'home', 'res1': res1, 'res2' : res2, 'res3': res3})
+    res = [None for _ in range(5)]
+    res[0] = Test1.objects.all().filter(user=request.user).last()
+    res[1] = Test2.objects.all().filter(user=request.user).last()
+    res[2] = Test3.objects.all().filter(user=request.user).last()
+    res[3] = Test4.objects.all().filter(user=request.user).last()
+    res[4] = Test5.objects.all().filter(user=request.user).last()
+    # res1 = Test1.objects.all().filter(user=request.user)
+    # res2 = Test2.objects.all().filter(user=request.user)
+    # res3 = Test3.objects.all().filter(user=request.user)
+    # print(res2[0].lt, res2[0].rt)
+    # if len(res1) == 0:
+    #     res1 = None
+    # else:
+    #     res1 = res1.last()
+    # if len(res2) == 0:
+    #     res2 = None
+    # else:
+    #     res2 = res2.last()
+    # if len(res3) == 0:
+    #     res3 = None
+    # else:
+    #     res3 = res3.last()
+    return render(request, 'home.html', {'cur_page': 'home', 'res': res})
 
 
 def account(request):
@@ -103,7 +109,7 @@ def change_password(request):
 def test_first(request):
     if not can_i_let_him_in(request):
         return redirect('login')
-    messege = None
+    message = None
     array = psycho_tests.test1
     if request.method == 'POST':
         data = forms.Form(request.POST).data
@@ -120,18 +126,10 @@ def test_first(request):
             visual_res += (str(data.get(i.strip())) == 'yes')
         for i in kinest:
             kinest_res += (str(data.get(i.strip())) == 'yes')
-        messege = "audio: " + str(audio_res) + ", visual: " + str(visual_res) + ", kinest: " + str(kinest_res)
-        messege2 = 'done'
-        res = Test1.objects.all().filter(user=request.user)
-        if len(res) == 0:
-            Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res)
-        else:
-            res = res[0]
-            res.audio = audio_res
-            res.visual = visual_res
-            res.kinest = kinest_res
-            res.save()
-    return render(request, 'test1.html', {'questions': array, 'message': messege})
+        message = "audio: " + str(audio_res) + ", visual: " + str(visual_res) + ", kinest: " + str(kinest_res)
+        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res)
+
+    return render(request, 'test1.html', {'questions': array, 'message': message})
 
 def test_second(request):
     if not can_i_let_him_in(request):
@@ -158,14 +156,8 @@ def test_second(request):
                 lt_res += res
             else:
                 lt_res -= res
-        last_res = Test2.objects.all().filter(user=request.user)
-        if len(last_res) == 0:
-            Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res)
-        else:
-            last_res = last_res[0]
-            last_res.rt = rt_res
-            last_res.lt = lt_res
-            last_res.save()
+
+        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res)
         if rt_res <= 30:
             message = "низкая rt"
         elif 31 <= rt_res <= 45:
@@ -196,22 +188,124 @@ def test_third(request):
                 ud_res += res
             else:
                 ud_res += 5 - res
-            last_res = Test3.objects.all().filter(user=request.user)
-            if len(last_res) == 0:
-                Test3.objects.create(user=request.user, ud=ud_res)
-            else:
-                last_res = last_res[0]
-                last_res.ud = ud_res
-                last_res.save()
-            if ud_res <= 50:
-                message = "Депрессии нет"
-            elif 51 <= ud_res <= 60:
-                message = "Легкая депрессия ситуативного или невротического генеза"
-            elif 61 <= ud_res <= 70:
-                message = "Субдепрессивное состояние или маскированная депрессия"
-            else:
-                message = "Истинное депрессивное состояние"
-
-
+        Test3.objects.create(user=request.user, ud=ud_res)
+        if ud_res <= 50:
+            message = "Депрессии нет"
+        elif 51 <= ud_res <= 60:
+            message = "Легкая депрессия ситуативного или невротического генеза"
+        elif 61 <= ud_res <= 70:
+            message = "Субдепрессивное состояние или маскированная депрессия"
+        else:
+            message = "Истинное депрессивное состояние"
     return render(request, 'test3.html', {'questions': array, 'message': message})
 
+def test_fourth(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
+    message = None
+    array = psycho_tests.test4
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        being_q = [1, 2, 7, 8, 13, 14, 19, 20, 25, 26]
+        activity_q = [3, 4, 9, 10, 15, 16, 21, 22, 27, 28]
+        mood_q = [5, 6, 11, 12, 17, 18, 23, 24, 29, 30]
+        inverse_q = [1, 2, 5, 6, 7, 8, 11, 12, 14, 17, 18, 19, 20,
+                     23, 24, 25, 26, 29, 30]
+        being_res = 0
+        activity_res = 0
+        mood_res = 0
+        for i in being_q:
+            pos = str(i)
+            res = int(data.get(pos))
+            if i in inverse_q:
+                being_res += 8 - res
+            else:
+                being_res += res
+        being_res /= len(being_q)
+        for i in activity_q:
+            pos = str(i)
+            res = int(data.get(pos))
+            if i in inverse_q:
+                activity_res += 8 - res
+            else:
+                activity_res += res
+        activity_res /= len(activity_q)
+        for i in mood_q:
+            pos = str(i)
+            res = int(data.get(pos))
+            if i in inverse_q:
+                mood_res += 8 - res
+            else:
+                mood_res += res
+        mood_res /= len(mood_q)
+        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res)
+        message = "activity = " + str(activity_res) + "/7, being = " + str(being_res) +\
+                  "/7, mood = " + str(mood_res) + "/7"
+    return render(request, 'test4.html', {'questions': array, 'message': message})
+
+
+def test_fifth(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
+    message = None
+    array = psycho_tests.test5
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        sinc_q_yes = [6, 24, 36]
+        sinc_q_no = [12, 18, 30, 42, 48, 54]
+        extrav_q_yes = [1, 3, 8, 10, 13, 17, 22, 27, 39, 44, 46, 49, 53, 56]
+        extrav_q_no = [5, 15, 20, 29, 32, 34, 37, 41, 51]
+        neuro_q = [2, 4, 7, 9, 11, 14, 16, 19, 21, 23, 26, 28, 31, 33, 35, 38, 40, 43, 45, 47, 50, 52, 55, 57]
+        sinc_res = 0
+        extrav_res = 0
+        neuro_res = 0
+        for i in sinc_q_yes:
+            sinc_res += (str(data.get(str(i))) == 'yes')
+        for i in sinc_q_no:
+            sinc_res += (str(data.get(str(i))) == 'no')
+        for i in extrav_q_yes:
+            extrav_res += (str(data.get(str(i))) == 'yes')
+        for i in extrav_q_no:
+            extrav_res += (str(data.get(str(i))) == 'no')
+        for i in neuro_q:
+            neuro_res += (str(data.get(str(i))) == 'yes')
+        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res)
+        message = ['', '', '']
+        message[0] = "Показатель искренности - " + str(sinc_res) + " из 9, что свидетельствует о"
+        if sinc_res <= 3:
+            message[0] += "б откровенности"
+        elif 4 <= sinc_res <= 6:
+            message[0] += " ситуативности"
+        else:
+            message[0] += " лживости"
+        message[1] = "Показатель экстравертности - " + str(extrav_res) + " из 24. Это означает, что вы "
+        if extrav_res <= 2:
+            message[1] += "сверхинтроверт"
+        elif 3 <= extrav_res <= 6:
+            message[1] += "интроверт"
+        elif 7 <= extrav_res <= 10:
+            message[1] += "потенциальный интроверт"
+        elif 11 <= extrav_res <= 14:
+            message[1] += "амбиверт"
+        elif 15 <= extrav_res <= 18:
+            message[1] += "потенциальный экстраверт"
+        elif 19 <= extrav_res <= 22:
+            message[1] += "экстраверт"
+        else:
+            message[1] += "сверхэкстраверт"
+        message[2] = "Показатель невротизма - " + str(neuro_res) + " из 24. Это означает, что вы "
+        if neuro_res <= 2:
+            message[2] += "сверхконкордант"
+        elif 3 <= neuro_res <= 6:
+            message[2] += "конкордант"
+        elif 7 <= neuro_res <= 10:
+            message[2] += "потенциальный конкордант"
+        elif 11 <= neuro_res <= 14:
+            message[2] += "нормостеник"
+        elif 15 <= neuro_res <= 18:
+            message[2] += "потенциальный дискордант"
+        elif 19 <= neuro_res <= 22:
+            message[2] += "дискордант"
+        else:
+            message[2] += "сверхдискордант"
+    return render(request, 'test5.html', {'questions': array, 'message': message})
