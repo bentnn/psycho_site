@@ -6,11 +6,9 @@ from django import forms
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import matplotlib.pyplot as plt
-from io import StringIO
-import numpy as np
 from . import psycho_tests
 from .models import *
+from .graphs import *
 
 #vrwcnwrxfxrnbmcw
 
@@ -44,7 +42,7 @@ def home(request):
     res[2] = Test3.objects.all().filter(user=request.user).last()
     res[3] = Test4.objects.all().filter(user=request.user).last()
     res[4] = Test5.objects.all().filter(user=request.user).last()
-    return render(request, 'home.html', {'cur_page': 'home', 'res': res})
+    return render(request, 'home.html', {'cur_page': 'home', 'res': res, 'graph': return_graph1_1(Test1.objects.all().filter(user=request.user))})
 
 
 def account(request):

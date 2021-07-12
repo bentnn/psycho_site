@@ -5,11 +5,7 @@
 {% endblock %}
 {% block content %}
     <h1 style="color: #111111">Home</h1>
-{#    {{ graph|safe }}#}
-
-
-
-
+    {{ graph|safe }}
 
     <p><a href="{% url 'test_first' %}">тест на канал восприятия</a></p>
     {% if res.0 %}
