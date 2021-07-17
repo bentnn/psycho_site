@@ -4,5 +4,119 @@
 Statistics
 {% endblock %}
 {% block content %}
-<h1 style="color: #111111">Statistics</h1>
+    <div class="container">
+        <h1 style="color: #111111">Статистика прохождения тестов</h1>
+        <br>
+        {% if tests.0 %}
+            <h2>Тест на канал восприятия</h2>
+                <br>
+            <h5>График изменения результатов</h5>
+            {{ graph1.0|safe }}
+            <p><span style="color: #00ffff" class="material-icons">crop_square</span> Голубой - аудиальный канал</p>
+            <p><span style="color: #8A2BE2" class="material-icons">crop_square</span> Фиолетовый - визуальный канал</p>
+            <p><span style="color: #FF7F50" class="material-icons">crop_square</span> Оранжевый - кинестетический канал</p>
+            <br>
+            <h5>Соотношение средних значений</h5>
+            {{ graph1.1|safe }}
+            <p><span style="color: #00ffff" class="material-icons">crop_square</span> Голубой - аудиальный канал</p>
+            <p><span style="color: #8A2BE2" class="material-icons">crop_square</span> Фиолетовый - визуальный канал</p>
+            <p><span style="color: #FF7F50" class="material-icons">crop_square</span> Оранжевый - кинестетический канал</p>
+            <br>
+            <h5>Все результаты тестирования</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Аудиальный</th>
+                    <th scope="col">Визуальный</th>
+                    <th scope="col">Кинестетический</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in tests.0 %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ i.audio }}</td>
+                        <td>{{ i.visual }}</td>
+                        <td>{{ i.kinest }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if tests.1 %}
+            <h2>Оценка уровня реактивной и личностной тревожности</h2>
+            <br>
+            <h5>График изменения результатов реактивной тревожности</h5>
+            {{ graph2.0|safe }}
+            <p>Меньше 30 - низкая тревожность</p>
+            <p>Больше 30 и меньше 45 - умеренная тревожность</p>
+            <p>Больше 45 - высокая тревожность</p>
+            <h5>График изменения результатов личностной тревожности</h5>
+            {{ graph2.1|safe }}
+            <p>Меньше 30 - низкая тревожность</p>
+            <p>Больше 30 и меньше 45 - умеренная тревожность</p>
+            <p>Больше 45 - высокая тревожность</p>
+            <h5>Все результаты тестирования</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Реактивная</th>
+                    <th scope="col">Личностная</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in tests.1 %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ i.rt }}</td>
+                        <td>{{ i.lt }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if tests.2 %}
+            <h2>Диагностика психических состояний и свойств лисности</h2>
+            <br>
+            <h5>График изменения результатов</h5>
+            {{ graph3|safe }}
+            <p>Меньше 50 - отсутсвие депрессии</p>
+            <p>От 51 до 60 - Легкая депрессия ситуативного или невротического генеза</p>
+            <p>От 61 до 70 - Субдепрессивное состояние или маскированная депрессия</p>
+            <p>Больше 70 - Истинное депрессивное состояние</p>
+            <h5>Все результаты тестирования</h5>
+            <table class="table" style="max-width: 450px">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Оценка показателя депрессии</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in tests.2 %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ i.ud }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if tests.3 %}
+            <h2>Опросник «САН»</h2>
+            <br>
+            <h5>График изменения результатов</h5>
+            {{ graph4.0|safe }}
+            <p><span style="color: yellow" class="material-icons">crop_square</span>Желтый - активность</p>
+            <p><span style="color: deepskyblue" class="material-icons">crop_square</span>Синий - самочувствие</p>
+            <p><span style="color: #FA7A7A" class="material-icons">crop_square</span>Красный - настроение</p>
+            <h5>Соотношение средних значений</h5>
+            {{ graph4.1|safe }}
+            <p><span style="color: yellow" class="material-icons">crop_square</span>Желтый - активность</p>
+            <p><span style="color: deepskyblue" class="material-icons">crop_square</span>Синий - самочувствие</p>
+            <p><span style="color: #FA7A7A" class="material-icons">crop_square</span>Красный - настроение</p>
+        {% endif %}
+    </div>
 {% endblock %}

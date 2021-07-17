@@ -10,7 +10,7 @@
         <p class="fw-bold regular_text">Имя пользователя: </p>
         <p class="regular_text"> {{ request.user.username }}</p>
         <p class="fw-bold regular_text">Имя:</p>
-        <p class="regular_text">
+        <p>
             {% if request.user.first_name %}
                 {{request.user.first_name }}
             {% else %}
@@ -31,11 +31,12 @@
                 {{request.user.email }}
             {% else %}
                 -
-                <p>Укажите, пожалуйста, электронну почту. Она потребуется в том случае, если вы забудете пароль.</p>
+                <p>Электронная почта потребуется в случае, если вы забудете пароль к этому сайту.</p>
             {% endif %}
         </p>
         <br>
-        <p><a class="btn btn-dark regular_text" href="{% url 'change_info' %}">Изменить персональные данные</a></p>
-        <p><a class="btn btn-dark regular_text" href="{% url 'change_password' %}">Сменить пароль</a></p>
+            <p><a style="width: 300px" class="btn btn-outline-dark" href="{% url 'change_info' %}">Изменить персональные данные</a></p>
+            <p><a style="width: 300px" class="btn btn-outline-dark" href="{% url 'change_password' %}">Сменить пароль</a></p>
+
     </div>
 {% endblock %}

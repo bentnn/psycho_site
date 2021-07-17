@@ -7,44 +7,49 @@
     <div class="container">
         <h2>Оценка уровня реактивной и личностной тревожности</h2>
         <br>
-        <h5>Инструкция к тесту: Прочитайте внимательно каждое
-            из приведенных ниже предложений и зачеркните
-            соответствующую цифру справа в зависимости от
-            того, как вы себя чувствуете в данный момент. Над
-            вопросами долго не задумывайтесь, поскольку правильных или неправильных ответов нет.</h5>
-        <h5>А — Нет, это не так.</h5>
-        <h5>В — Пожалуй, так.</h5>
-        <h5>С — Верно.</h5>
-        <h5>D — Совершенно верно.</h5>
-        <h5>Необходимо ответить на все вопросы.</h5>
-        <br>
-        <form method="post">
-            {% csrf_token %}
-            {% for i in questions %}
-                <p>{{ i }}</p>
-                <p>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio1" value="1" required>
-                    <label class="form-check-label" for="inlineRadio1">A</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio2" value="2" required>
-                    <label class="form-check-label" for="inlineRadio2">B</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio3" value="3" required>
-                    <label class="form-check-label" for="inlineRadio2">C</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio4" value="4" required>
-                    <label class="form-check-label" for="inlineRadio2">D</label>
-                </div>
-                </p>
-            {% endfor %}
+        {% if message %}
+            <h5>Результат прохождения теста:</h5>
+            <p>{{ message }}</p>
+            <p><a class="btn btn-dark" href="{% url 'test_second' %}">Пройти тест еще раз</a></p>
+        {% else %}
+            <h5>Инструкция к тесту: Прочитайте внимательно каждое
+                из приведенных ниже предложений и зачеркните
+                соответствующую цифру справа в зависимости от
+                того, как вы себя чувствуете в данный момент. Над
+                вопросами долго не задумывайтесь, поскольку правильных или неправильных ответов нет.</h5>
+            <h5>А — Нет, это не так.</h5>
+            <h5>В — Пожалуй, так.</h5>
+            <h5>С — Верно.</h5>
+            <h5>D — Совершенно верно.</h5>
+            <h5>Необходимо ответить на все вопросы.</h5>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                {% for i in questions %}
+                    <p>{{ i }}</p>
+                    <p>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio1" value="1" required>
+                        <label class="form-check-label" for="inlineRadio1">A</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio2" value="2" required>
+                        <label class="form-check-label" for="inlineRadio2">B</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio3" value="3" required>
+                        <label class="form-check-label" for="inlineRadio2">C</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio4" value="4" required>
+                        <label class="form-check-label" for="inlineRadio2">D</label>
+                    </div>
+                    </p>
+                {% endfor %}
 
 
-            <p><button type="submit" class="btn btn-dark">Отправить</button></p>
-        </form>
-        <p>{{ message }}</p>
+                <p><button type="submit" class="btn btn-dark">Отправить</button></p>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

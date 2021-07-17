@@ -10,7 +10,7 @@ from . import psycho_tests
 from .models import *
 from .graphs import *
 
-#vrwcnwrxfxrnbmcw
+
 
 def can_i_let_him_in(request):
     return request.user.is_authenticated and not request.user.is_superuser
@@ -42,19 +42,31 @@ def home(request):
     res[2] = Test3.objects.all().filter(user=request.user).last()
     res[3] = Test4.objects.all().filter(user=request.user).last()
     res[4] = Test5.objects.all().filter(user=request.user).last()
-    return render(request, 'home.html', {'cur_page': 'home', 'res': res, 'graph': return_graph1_1(Test1.objects.all().filter(user=request.user))})
+    return render(request, 'home.html', {'cur_page': 'home', 'res': res,
+                                         'graph': return_graph_5_3(Test5.objects.all().filter(user=request.user))})
 
 
 def account(request):
     if not can_i_let_him_in(request):
         return redirect('login')
-    return render(request, 'account.html', {'cur_page' : 'account'})
+    return render(request, 'account.html', {'cur_page': 'account'})
 
 
 def statistics(request):
     if not can_i_let_him_in(request):
         return redirect('statistics')
-    return render(request, 'statistics.html', {'cur_page' : 'statistics'})
+    tests = [Test1.objects.all().filter(user=request.user),
+             Test2.objects.all().filter(user=request.user),
+             Test3.objects.all().filter(user=request.user),
+             Test4.objects.all().filter(user=request.user),
+             Test5.objects.all().filter(user=request.user)]
+    graph1 = [return_graph1_1(tests[0]), return_graph1_2(tests[0])]
+    graph2 = [return_graph2_1(tests[1]), return_graph2_2(tests[1])]
+    graph3 = return_graph3(tests[2])
+    graph4 = [return_graph4_1(tests[3]), return_graph4_2(tests[3])]
+    graph5 = [return_graph_5_1(tests[4]), return_graph_5_2(tests[4]), return_graph_5_3(tests[4])]
+    return render(request, 'statistics.html', {'cur_page': 'statistics', 'tests': tests, 'graph1': graph1,
+                                               'graph2': graph2, 'graph3': graph3, 'graph4': graph4, 'graph5': graph5})
 
 
 def login_view(request):
@@ -95,18 +107,19 @@ def signout_view(request):
 def change_password(request):
     if not can_i_let_him_in(request):
         return redirect('login')
-    messege = None
+    message = None
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
-            messege = "Ваш пароль был успешно изменен"
+            message = "Ваш пароль был успешно изменен"
         else:
-            messege = "Форма смены пароля невалидна"
+            message = "Форма смены пароля невалидна"
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'change_password.html', {'form': form, 'messege': messege})
+    return render(request, 'change_password.html', {'form': form, 'message': message})
+
 
 def change_info(request):
     if not can_i_let_him_in(request):
@@ -123,6 +136,7 @@ def change_info(request):
 
     return render(request, 'change_info.html')
 
+
 def send_mail(user, new):
     addr_from = "hse.tests@yandex.ru"
     password = "ihoqgelsccaxmyha"
@@ -137,7 +151,8 @@ def send_mail(user, new):
     text = "Здравствуйте"
     if user.first_name != "":
         text += ", " + user.first_name
-    text += ". На сайте психологических тестов от высшей школы экономики была активирована функция 'восстановить пароль' для вашего аккаунта."
+    text += ". На сайте психологических тестов от высшей школы экономики была активирована функция " \
+            "'восстановить пароль' для вашего аккаунта."
     text += "\nВаш новый пароль: " + new + ". Вы сможете заменить его в вашем личном кабинете."
     msg.attach(MIMEText(text, 'plain'))
     try:
@@ -152,6 +167,7 @@ def send_mail(user, new):
         return 0
     except:
         return 1
+
 
 def forgot_password(request):
     message = None
@@ -169,6 +185,7 @@ def forgot_password(request):
             message = "Пользователь не найден"
 
     return render(request, 'forgot_password.html', {'message': message})
+
 
 def test_first(request):
     if not can_i_let_him_in(request):
@@ -190,10 +207,12 @@ def test_first(request):
             visual_res += (str(data.get(i.strip())) == 'yes')
         for i in kinest:
             kinest_res += (str(data.get(i.strip())) == 'yes')
-        message = "audio: " + str(audio_res) + ", visual: " + str(visual_res) + ", kinest: " + str(kinest_res)
+        message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: "\
+                  + str(visual_res) + ", Кинестетический канал восприятия: " + str(kinest_res)
         Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res)
 
     return render(request, 'test1.html', {'questions': array, 'message': message})
+
 
 def test_second(request):
     if not can_i_let_him_in(request):
@@ -223,18 +242,19 @@ def test_second(request):
 
         Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res)
         if rt_res <= 30:
-            message = "низкая rt"
+            message = "низкая реактивная тревожность"
         elif 31 <= rt_res <= 45:
-            message = "умеренная rt"
+            message = "умеренная реактивная тревожность"
         else:
-            message = "высокая rt"
+            message = "высокая реактивная тревожность"
         if lt_res <= 30:
-            message += ", низкая lt"
+            message += ", низкая личностная тревожность"
         elif 31 <= lt_res <= 45:
-            message += ", умеренная lt"
+            message += ", умеренная личностная тревожность"
         else:
-            message += ", высокая lt"
+            message += ", высокая личностная тревожность"
     return render(request, 'test2.html', {'questions': array, 'message': message})
+
 
 def test_third(request):
     if not can_i_let_him_in(request):
@@ -254,14 +274,15 @@ def test_third(request):
                 ud_res += 5 - res
         Test3.objects.create(user=request.user, ud=ud_res)
         if ud_res <= 50:
-            message = "Депрессии нет"
+            message = "У вас отсутствует депрессия"
         elif 51 <= ud_res <= 60:
-            message = "Легкая депрессия ситуативного или невротического генеза"
+            message = "У вас легкая депрессия ситуативного или невротического генеза"
         elif 61 <= ud_res <= 70:
-            message = "Субдепрессивное состояние или маскированная депрессия"
+            message = "У вас субдепрессивное состояние или маскированная депрессия"
         else:
-            message = "Истинное депрессивное состояние"
+            message = "У вас истинное депрессивное состояние"
     return render(request, 'test3.html', {'questions': array, 'message': message})
+
 
 def test_fourth(request):
     if not can_i_let_him_in(request):
@@ -303,8 +324,15 @@ def test_fourth(request):
                 mood_res += res
         mood_res /= len(mood_q)
         Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res)
-        message = "activity = " + str(activity_res) + "/7, being = " + str(being_res) +\
-                  "/7, mood = " + str(mood_res) + "/7"
+        message = ['', '']
+        message[0] = "Активность = " + str(activity_res) + "/7, самочувствие = " + str(being_res) + \
+                     "/7, настроение = " + str(mood_res) + "/7."
+        sum = activity_res + being_res + mood_res
+        a_proc = activity_res / sum * 100
+        b_proc = being_res / sum * 100
+        m_proc = 100 - b_proc - a_proc
+        message[1] = "В процентном соотношении: активность - {:.2f}%, самочувствие - " \
+                     "{:.2f}%, настроение - {:.2f}%".format(a_proc, b_proc, m_proc)
     return render(request, 'test4.html', {'questions': array, 'message': message})
 
 
