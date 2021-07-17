@@ -4,7 +4,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                     <a class="nav-link {% if cur_page == 'home' %} active {% endif %}" href="{% url 'home' %}"><span class="material-icons">home</span></a>
                     <a class="nav-link {% if cur_page == 'account' %} active {% endif %}" href="{% url 'account' %}"><span class="material-icons">person</span></a>

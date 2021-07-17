@@ -42,8 +42,7 @@ def home(request):
     res[2] = Test3.objects.all().filter(user=request.user).last()
     res[3] = Test4.objects.all().filter(user=request.user).last()
     res[4] = Test5.objects.all().filter(user=request.user).last()
-    return render(request, 'home.html', {'cur_page': 'home', 'res': res,
-                                         'graph': return_graph_5_3(Test5.objects.all().filter(user=request.user))})
+    return render(request, 'home.html', {'cur_page': 'home', 'res': res})
 
 
 def account(request):

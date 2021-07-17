@@ -23,7 +23,7 @@ Statistics
             <p><span style="color: #FF7F50" class="material-icons">crop_square</span> Оранжевый - кинестетический канал</p>
             <br>
             <h5>Все результаты тестирования</h5>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">№</th>
@@ -58,7 +58,7 @@ Statistics
             <p>Больше 30 и меньше 45 - умеренная тревожность</p>
             <p>Больше 45 - высокая тревожность</p>
             <h5>Все результаты тестирования</h5>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">№</th>
@@ -87,7 +87,7 @@ Statistics
             <p>От 61 до 70 - Субдепрессивное состояние или маскированная депрессия</p>
             <p>Больше 70 - Истинное депрессивное состояние</p>
             <h5>Все результаты тестирования</h5>
-            <table class="table" style="max-width: 450px">
+            <table class="table table-striped" style="max-width: 450px">
                 <thead>
                 <tr>
                     <th scope="col">№</th>
@@ -117,6 +117,75 @@ Statistics
             <p><span style="color: yellow" class="material-icons">crop_square</span>Желтый - активность</p>
             <p><span style="color: deepskyblue" class="material-icons">crop_square</span>Синий - самочувствие</p>
             <p><span style="color: #FA7A7A" class="material-icons">crop_square</span>Красный - настроение</p>
+            <h5>Все результаты тестирования</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Активность</th>
+                    <th scope="col">Самочувствие</th>
+                    <th scope="col">Настроение</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in tests.3 %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ i.activity }}</td>
+                        <td>{{ i.being }}</td>
+                        <td>{{ i.mood }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if tests.4 %}
+            <h2>Теста Г. Айзенка</h2>
+            <br>
+            <h5>График изменения показателя искренности</h5>
+            {{ graph5.0|safe }}
+            <p>Меньше 4 - открытость</p>
+            <p>От 4 до 6 - ситуативность</p>
+            <p>Больше 6 - лживость</p>
+            <h5>График изменения показателя экстравертности</h5>
+            {{ graph5.1|safe }}
+            <p>Меньше 3 - сверхинтроверт</p>
+            <p>От 3 до 6 - интроверт</p>
+            <p>От 7 до 10 - потенциальный интроверт</p>
+            <p>От 11 до 14 - амбиверт</p>
+            <p>От 15 до 18 - потенциальный экстраверт</p>
+            <p>ОТ 19 до 22 - экстраверт</p>
+            <p>Больше 22 - сверхинтроверт</p>
+            <h5>График изменения показателя невротизма</h5>
+            {{ graph5.2|safe }}
+            <p>Меньше 3 - сверхконкордант</p>
+            <p>От 3 до 6 - конкордант</p>
+            <p>От 7 до 10 - потенциальный конкордант</p>
+            <p>От 11 до 14 - нормостеник</p>
+            <p>От 15 до 18 - потенциальный дискордант</p>
+            <p>ОТ 19 до 22 - дискордант</p>
+            <p>Больше 22 - сверхдискордант</p>
+            <h5>Все результаты тестирования</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Искренность</th>
+                    <th scope="col">Экстравертность</th>
+                    <th scope="col">Невротизм</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in tests.4 %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ i.sincerity }}</td>
+                        <td>{{ i.extrav }}</td>
+                        <td>{{ i.neuro }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 {% endblock %}
