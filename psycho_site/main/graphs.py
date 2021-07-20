@@ -108,6 +108,26 @@ def return_graph2_2(array):  # Второй график для второго �
     return data
 
 
+# def return_graph3(array):  # График для Третьего теста
+#     x = []
+#     y = []
+#     for n, i in enumerate(array):
+#         x.append(n)
+#         y.append(i.ud)
+#
+#     fig, ax = plt.subplots()
+#     ax.fill_between(x, y, color="green")
+#     plt.axhline(y=50, dashes=(6, 4), linewidth=0.8, color="black")
+#     plt.axhline(y=60, dashes=(6, 4), linewidth=0.8, color="black")
+#     plt.axhline(y=70, dashes=(6, 4), linewidth=0.8, color="black")
+#     graph_settings(ax, x, y, 5.0)
+#
+#     imgdata = StringIO()
+#     fig.savefig(imgdata, format='svg', transparent=True)
+#     imgdata.seek(0)
+#     data = imgdata.getvalue()
+#     return data
+
 def return_graph3(array):  # График для Третьего теста
     x = []
     y = []
@@ -117,10 +137,11 @@ def return_graph3(array):  # График для Третьего теста
 
     fig, ax = plt.subplots()
     ax.fill_between(x, y, color="green")
+    ax.plot(x, y, color="green", alpha=0.5, linewidth=3, marker='o')  # Сделал график, чтобы точка в 0 отображалась
     plt.axhline(y=50, dashes=(6, 4), linewidth=0.8, color="black")
     plt.axhline(y=60, dashes=(6, 4), linewidth=0.8, color="black")
     plt.axhline(y=70, dashes=(6, 4), linewidth=0.8, color="black")
-    graph_settings(ax, x, y, 5.0)
+    graph_settings(ax, x, [90], 5.0)  # Выставил максимум
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
@@ -188,9 +209,8 @@ def return_graph_5_1(array):
 
     fig, ax = plt.subplots()
     ax.plot(x, y, color="mediumvioletred", marker='o')
-    # если зменить ax.plot на ax.fill_between, будет закрашенный,
-    # но тогда стоит убрать marker ='o', так как может выглядеть стремно, но если хочешь проверь
-    graph_settings(ax, x, y, 2.0)
+    ax.grid(axis='y', alpha=0.8)  # Добавил сетку
+    graph_settings(ax, x, [10], 1.0)  # Выставил максимум
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
@@ -209,7 +229,8 @@ def return_graph_5_2(array):
 
     fig, ax = plt.subplots()
     ax.plot(x, y, color="deepskyblue", marker='o')
-    graph_settings(ax, x, y, 2.0)
+    ax.grid(axis='y', alpha=0.8)  # Добавил сетку
+    graph_settings(ax, x, [25], 2.0)  # Выставил максимум
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
@@ -228,7 +249,8 @@ def return_graph_5_3(array):
 
     fig, ax = plt.subplots()
     ax.plot(x, y, color="darkorange", marker='o')
-    graph_settings(ax, x, y, 2.0)
+    ax.grid(axis='y', alpha=0.8)  # Добавил сетку
+    graph_settings(ax, x, [25], 2.0)  # Выставил максимум
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
@@ -236,3 +258,61 @@ def return_graph_5_3(array):
 
     data = imgdata.getvalue()
     return data
+
+# def return_graph_5_1(array):
+#     x = []
+#     y = []
+#     for n, i in enumerate(array):
+#         x.append(n)
+#         y.append(i.sincerity)
+#
+#     fig, ax = plt.subplots()
+#     ax.plot(x, y, color="mediumvioletred", marker='o')
+#     # если зменить ax.plot на ax.fill_between, будет закрашенный,
+#     # но тогда стоит убрать marker ='o', так как может выглядеть стремно, но если хочешь проверь
+#     graph_settings(ax, x, y, 2.0)
+#
+#     imgdata = StringIO()
+#     fig.savefig(imgdata, format='svg', transparent=True)
+#     imgdata.seek(0)
+#
+#     data = imgdata.getvalue()
+#     return data
+#
+#
+# def return_graph_5_2(array):
+#     x = []
+#     y = []
+#     for n, i in enumerate(array):
+#         x.append(n)
+#         y.append(i.extrav)
+#
+#     fig, ax = plt.subplots()
+#     ax.plot(x, y, color="deepskyblue", marker='o')
+#     graph_settings(ax, x, y, 2.0)
+#
+#     imgdata = StringIO()
+#     fig.savefig(imgdata, format='svg', transparent=True)
+#     imgdata.seek(0)
+#
+#     data = imgdata.getvalue()
+#     return data
+#
+#
+# def return_graph_5_3(array):
+#     x = []
+#     y = []
+#     for n, i in enumerate(array):
+#         x.append(n)
+#         y.append(i.neuro)
+#
+#     fig, ax = plt.subplots()
+#     ax.plot(x, y, color="darkorange", marker='o')
+#     graph_settings(ax, x, y, 2.0)
+#
+#     imgdata = StringIO()
+#     fig.savefig(imgdata, format='svg', transparent=True)
+#     imgdata.seek(0)
+#
+#     data = imgdata.getvalue()
+#     return data
