@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from . import psycho_tests
 from .models import *
 from .graphs import *
-
+import datetime
 
 
 def can_i_let_him_in(request):
@@ -36,14 +36,40 @@ def can_i_let_him_in(request):
 def home(request):
     if not can_i_let_him_in(request):
         return redirect('login')
+    # res = [None for _ in range(5)]
+    # res[0] = Test1.objects.all()
+    # res[1] = Test2.objects.all()
+    # res[2] = Test3.objects.all()
+    # res[3] = Test4.objects.all()
+    # res[4] = Test5.objects.all()
+    # for i in res[0]:
+    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
+    #     i.save()
+    # for i in res[1]:
+    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
+    #     i.save()
+    # for i in res[2]:
+    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
+    #     i.save()
+    # for i in res[3]:
+    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
+    #     i.save()
+    # for i in res[4]:
+    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
+    #     i.save()
+
+    return render(request, 'home.html')
+
+def tests(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
     res = [None for _ in range(5)]
     res[0] = Test1.objects.all().filter(user=request.user).last()
     res[1] = Test2.objects.all().filter(user=request.user).last()
     res[2] = Test3.objects.all().filter(user=request.user).last()
     res[3] = Test4.objects.all().filter(user=request.user).last()
     res[4] = Test5.objects.all().filter(user=request.user).last()
-    return render(request, 'home.html', {'cur_page': 'home', 'res': res})
-
+    return render(request, 'tests.html', {'res': res})
 
 def account(request):
     if not can_i_let_him_in(request):
@@ -64,7 +90,7 @@ def statistics(request):
     graph3 = return_graph3(tests[2])
     graph4 = [return_graph4_1(tests[3]), return_graph4_2(tests[3])]
     graph5 = [return_graph_5_1(tests[4]), return_graph_5_2(tests[4]), return_graph_5_3(tests[4])]
-    return render(request, 'statistics.html', {'cur_page': 'statistics', 'tests': tests, 'graph1': graph1,
+    return render(request, 'statistics.html', {'tests': tests, 'graph1': graph1,
                                                'graph2': graph2, 'graph3': graph3, 'graph4': graph4, 'graph5': graph5})
 
 
@@ -206,9 +232,9 @@ def test_first(request):
             visual_res += (str(data.get(i.strip())) == 'yes')
         for i in kinest:
             kinest_res += (str(data.get(i.strip())) == 'yes')
-        message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: "\
+        message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: " \
                   + str(visual_res) + ", Кинестетический канал восприятия: " + str(kinest_res)
-        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res)
+        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res, date=datetime.date.today())
 
     return render(request, 'test1.html', {'questions': array, 'message': message})
 
@@ -239,7 +265,7 @@ def test_second(request):
             else:
                 lt_res -= res
 
-        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res)
+        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=datetime.date.today())
         if rt_res <= 30:
             message = "низкая реактивная тревожность"
         elif 31 <= rt_res <= 45:
@@ -271,7 +297,7 @@ def test_third(request):
                 ud_res += res
             else:
                 ud_res += 5 - res
-        Test3.objects.create(user=request.user, ud=ud_res)
+        Test3.objects.create(user=request.user, ud=ud_res, date=datetime.date.today())
         if ud_res <= 50:
             message = "У вас отсутствует депрессия"
         elif 51 <= ud_res <= 60:
@@ -322,7 +348,7 @@ def test_fourth(request):
             else:
                 mood_res += res
         mood_res /= len(mood_q)
-        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res)
+        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res, date=datetime.date.today())
         message = ['', '']
         message[0] = "Активность = " + str(activity_res) + "/7, самочувствие = " + str(being_res) + \
                      "/7, настроение = " + str(mood_res) + "/7."
@@ -360,7 +386,7 @@ def test_fifth(request):
             extrav_res += (str(data.get(str(i))) == 'no')
         for i in neuro_q:
             neuro_res += (str(data.get(str(i))) == 'yes')
-        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res)
+        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res, date=datetime.date.today())
         message = ['', '', '']
         message[0] = "Показатель искренности - " + str(sinc_res) + " из 9, что свидетельствует о"
         if sinc_res <= 3:

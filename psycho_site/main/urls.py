@@ -11,6 +11,7 @@ urlpatterns = [
     path('change_info', views.change_info, name='change_info'),
     path('statistics', views.statistics, name='statistics'),
     path('account/change_password', views.change_password, name='change_password'),
+    path('tests', views.tests, name='tests'),
     path('test1', views.test_first, name='test_first'),
     path('test2', views.test_second, name='test_second'),
     path('test3', views.test_third, name='test_third'),

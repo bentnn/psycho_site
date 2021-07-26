@@ -5,121 +5,50 @@
 {% endblock %}
 {% block content %}
     <br>
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="container" style="max-width: 1000px">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://avatars.mds.yandex.net/get-zen_doc/3420563/pub_5f9331e0d2b7e4128862e5e4_5f9338424dcc5c613ca47a5b/scale_1200" class="card-img-top" alt="...">
+                    <img src="https://image.flaticon.com/icons/png/512/2916/2916315.png" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Тест на канал восприятия</h5>
-                        <p class="card-text">Тест покажет в каком соотношении у вас задействованы аудиальный, визуальный и кинестетический канал восприятия</p>
-                        {% if res.0 %}
-                            <p class="card-text">Ваши последние результаты прохождения теста: аудиальный - {{ res.0.audio }},
-                            визуальный - {{ res.0.visual }}, кинестетический - {{ res.0.kinest }}</p>
-                            <p class="card-text">Более подробную информацию о прохождении тестов вы можете получить в разделе статистики
-                                <span class="material-icons">equalizer</span></p>
-                        {% endif %}
-                        <a class="btn btn-dark" href="{% url "test_first" %}">Перейти к тесту</a>
+                        <h5 class="card-title">Тесты</h5>
+                        <p class="card-text">Тест на канал восприятия, оценка уровня тревожности,
+                            диагностика психических состояний и свойств лисности...</p>
+                        <a class="btn btn-dark" href="{% url "tests" %}">Перейти</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://www.sobaka.ru/images/image/01/27/65/93/_normal.jpg" class="card-img-top" alt="...">
+                    <img src="https://d338t8kmirgyke.cloudfront.net/icons/icon_pngs/000/007/878/original/graphical.png" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Оценка уровня реактивной и личностной тревожности</h5>
-                        <p class="card-text">Данный тест является надежным и информативным способом самооценки уровня тревожности
-                            в данный момент (реактивная тревожность как состояние) и личностной тревожности (как устойчивая
-                            характеристика человека)</p>
-                        {% if res.1 %}
-                            <p class="card-text">Ваши последние результаты прохождения теста: реактивная тревожность - {{ res.1.rt }},
-                                личностная тревожность - {{ res.1.lt }}</p>
-                            <p class="card-text">Более подробную информацию о прохождении тестов вы можете получить в разделе статистики
-                                <span class="material-icons">equalizer</span></p>
-                        {% endif %}
-                        <a class="btn btn-dark" href="{% url "test_second" %}">Перейти к тесту</a>
+                        <h5 class="card-title">Статистика</h5>
+                        <p class="card-text">Статистика по всем пройденым тестам</p>
+                        <a class="btn btn-dark" href="{% url "statistics" %}">Перейти</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://assets.discours.io/unsafe/900x/production/image/059b2860-90f2-11e8-85d5-b503ca62937e.jpeg" class="card-img-top" alt="...">
+                    <img src="https://cdn.iconscout.com/icon/free/png-512/recommendation-438971.png" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Диагностика психических состояний и свойств лисности</h5>
-                        <p class="card-text">Опросник разработан для дифференциальной диагностики депрессивных
-                            состояний и состояний, близких к депрессии, для скриннинг диагностики
-                            при массовых исследованиях и в целях предварительной, доврачебной диагностики.</p>
-                        {% if res.2 %}
-                            <p class="card-text">Ваши последние результаты прохождения теста: показатель депрессии - {{ res.2.ud }}</p>
-                            <p class="card-text">Более подробную информацию о прохождении тестов вы можете получить в разделе статистики
-                                <span class="material-icons">equalizer</span></p>
-                        {% endif %}
-                        <a class="btn btn-dark" href="{% url "test_third" %}">Перейти к тесту</a>
+                        <h5 class="card-title">Рекомендации</h5>
+                        <p class="card-text">Рекомендации, основанные на диагностике ваших результатов</p>
+                        <a class="btn btn-dark" href="">Перейти</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://b1.filmpro.ru/c/513381.700xp.jpg" class="card-img-top" alt="...">
+                    <img src="https://i.pinimg.com/474x/b8/61/ce/b861ce6f8dce209f494517101782d18e.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Опросник «САН»</h5>
-                        <p class="card-text">Тест предназначен для оперативной оценки активности, самочувствия и настроения</p>
-                        {% if res.3 %}
-                            <p class="card-text">Ваши последние результаты прохождения теста: активность - {{ res.3.activity }},
-                                самочувствие - {{ res.3.being }}, настроение - {{ res.3.mood }}</p>
-                            <p class="card-text">Более подробную информацию о прохождении тестов вы можете получить в разделе статистики
-                                <span class="material-icons">equalizer</span></p>
-                        {% endif %}
-                        <a class="btn btn-dark" href="{% url "test_fourth" %}">Перейти к тесту</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-dark">
-                    <img src="https://static.kulturologia.ru/files/u8921/portr-gachet-999.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Теста Г. Айзенка</h5>
-                        <p class="card-text">Тест показывает уровень откровенности, экстраверсии (интроверсии) и невротизма</p>
-                        {% if res.4 %}
-                            <p class="card-text">Ваши последние результаты прохождения теста: откровенность - {{ res.4.sincerity }}/9,
-                                экстраверсия (интроверсия) - {{ res.4.extrav }}/24, невротизм - {{ res.2.neuro }}/24</p>
-                            <p class="card-text">Более подробную информацию о прохождении тестов вы можете получить в разделе статистики
-                                <span class="material-icons">equalizer</span></p>
-                        {% endif %}
-                        <a class="btn btn-dark" href="{% url "test_fifth" %}">Перейти к тесту</a>
+                        <h5 class="card-title">Тренажеры</h5>
+                        <p class="card-text">Тренажеры для улучшения личностных качеств</p>
+                        <a class="btn btn-dark" href="">Перейти</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <br>
-
-{#    <div class="card" style="width: 18rem;">#}
-{#        <img src="..." class="card-img-top" alt="...">#}
-{#        <div class="card-body">#}
-{#            <h5 class="card-title">Card title</h5>#}
-{#            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>#}
-{#            <a href="#" class="btn btn-primary">Go somewhere</a>#}
-{#        </div>#}
-{#    </div>#}
-{#    <p><a href="{% url 'test_first' %}">тест на канал восприятия</a></p>#}
-{#    {% if res.0 %}#}
-{#        <p>У вас уже audio = {{ res.0.audio }}, visual = {{ res.0.visual }}, kinest = {{ res.0.kinest }}</p>#}
-{#    {% endif %}#}
-{#    <p><a href="{% url 'test_second' %}">тест на тревожность</a></p>#}
-{#    {% if res.1 %}#}
-{#        <p>У вас уже rt = {{ res.1.rt }}, lt = {{ res.1.lt }}</p>#}
-{#    {% endif %}#}
-{#    <p><a href="{% url 'test_third' %}">шкала депрессии</a></p>#}
-{#    {% if res.2 %}#}
-{#        <p>У вас уже ud = {{ res.2.ud }}</p>#}
-{#    {% endif %}#}
-{#    <p><a href="{% url 'test_fourth' %}">Опросник САН</a></p>#}
-{#    {% if res.3 %}#}
-{#        <p>У вас уже activity = {{ res.3.activity }}, being = {{ res.3.being }}, mood = {{ res.3.mood }}</p>#}
-{#    {% endif %}#}
-{#    <p><a href="{% url 'test_fifth' %}">Теста Г. Айзенка</a></p>#}
-{#    {% if res.4 %}#}
-{#        <p>У вас уже sincerity = {{ res.4.sincerity }}, extrav = {{ res.4.extrav }}, neuro = {{ res.4.neuro }}</p>#}
-{#    {% endif %}#}
 {% endblock %}

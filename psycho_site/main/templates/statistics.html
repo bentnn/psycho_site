@@ -30,6 +30,7 @@ Statistics
                     <th scope="col">Аудиальный</th>
                     <th scope="col">Визуальный</th>
                     <th scope="col">Кинестетический</th>
+                    <th scope="col">Дата</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,7 @@ Statistics
                         <td>{{ i.audio }}</td>
                         <td>{{ i.visual }}</td>
                         <td>{{ i.kinest }}</td>
+                        <td>{{ i.date }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -64,6 +66,7 @@ Statistics
                     <th scope="col">№</th>
                     <th scope="col">Реактивная</th>
                     <th scope="col">Личностная</th>
+                    <th scope="col">Дата</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,6 +75,7 @@ Statistics
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ i.rt }}</td>
                         <td>{{ i.lt }}</td>
+                        <td>{{ i.date }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -92,6 +96,7 @@ Statistics
                 <tr>
                     <th scope="col">№</th>
                     <th scope="col">Оценка показателя депрессии</th>
+                    <th scope="col">Дата</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -99,6 +104,7 @@ Statistics
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ i.ud }}</td>
+                        <td>{{ i.date }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -125,6 +131,7 @@ Statistics
                     <th scope="col">Активность</th>
                     <th scope="col">Самочувствие</th>
                     <th scope="col">Настроение</th>
+                    <th scope="col">Дата</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -134,6 +141,7 @@ Statistics
                         <td>{{ i.activity }}</td>
                         <td>{{ i.being }}</td>
                         <td>{{ i.mood }}</td>
+                        <td>{{ i.date }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -173,6 +181,7 @@ Statistics
                     <th scope="col">Искренность</th>
                     <th scope="col">Экстравертность</th>
                     <th scope="col">Невротизм</th>
+                    <th scope="col">Дата</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -182,6 +191,7 @@ Statistics
                         <td>{{ i.sincerity }}</td>
                         <td>{{ i.extrav }}</td>
                         <td>{{ i.neuro }}</td>
+                        <td>{{ i.date }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
