@@ -16,48 +16,9 @@ def can_i_let_him_in(request):
     return request.user.is_authenticated and not request.user.is_superuser
 
 
-# def return_graph():
-#
-#     x = np.arange(0, np.pi*8, .1)
-#     y = np.sin(x)
-#
-#     plt.style.use('seaborn-dark-palette')
-#
-#     fig = plt.figure(dpi=2000)
-#     plt.plot(x, y)
-#
-#     imgdata = StringIO()
-#     fig.savefig(imgdata, format='svg', transparent=True)
-#     imgdata.seek(0)
-#
-#     data = imgdata.getvalue()
-#     return data
-
 def home(request):
     if not can_i_let_him_in(request):
         return redirect('login')
-    # res = [None for _ in range(5)]
-    # res[0] = Test1.objects.all()
-    # res[1] = Test2.objects.all()
-    # res[2] = Test3.objects.all()
-    # res[3] = Test4.objects.all()
-    # res[4] = Test5.objects.all()
-    # for i in res[0]:
-    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
-    #     i.save()
-    # for i in res[1]:
-    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
-    #     i.save()
-    # for i in res[2]:
-    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
-    #     i.save()
-    # for i in res[3]:
-    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
-    #     i.save()
-    # for i in res[4]:
-    #     i.date = datetime.datetime(2021, 8, 20, 12, 0)
-    #     i.save()
-
     return render(request, 'home.html')
 
 def tests(request):
@@ -165,8 +126,6 @@ def change_info(request):
 def send_mail(user, new):
     addr_from = "hse.tests@yandex.ru"
     password = "ihoqgelsccaxmyha"
-    # addr_from = "anticovidbracelet@yandex.com"
-    # password  = "bisxbtrjucwaebfi"
 
     msg = MIMEMultipart()
     msg['From'] = addr_from
