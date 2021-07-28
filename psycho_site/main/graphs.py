@@ -10,7 +10,7 @@ def graph_settings(ax, x, y, s):
     ax.set_ylim(ymin=0)
     ax.set_xlim(xmin=0)
     axis = plt.gca()
-    axis.axes.xaxis.set_ticklabels([])
+    axis.axes.xaxis.set_ticklabels(x)
     plt.xticks(x)
     plt.yticks(np.arange(0, max(y) + 1, s))
     plt.style.use('bmh')
