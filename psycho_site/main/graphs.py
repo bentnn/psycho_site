@@ -7,10 +7,11 @@ from django.http import HttpResponse
 
 
 def graph_settings(ax, x, y, s):
+    x_l = [i + 1 for i in x]
     ax.set_ylim(ymin=0)
     ax.set_xlim(xmin=0)
     axis = plt.gca()
-    axis.axes.xaxis.set_ticklabels(x)
+    axis.axes.xaxis.set_ticklabels(x_l)
     plt.xticks(x)
     plt.yticks(np.arange(0, max(y) + 1, s))
     plt.style.use('bmh')
