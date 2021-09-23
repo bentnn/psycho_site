@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Group, User
 import datetime
 
+
 class Test1(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     audio = models.IntegerField()

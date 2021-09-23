@@ -32,6 +32,7 @@ def tests(request):
     res[4] = Test5.objects.all().filter(user=request.user).last()
     return render(request, 'tests.html', {'res': res})
 
+
 def account(request):
     if not can_i_let_him_in(request):
         return redirect('login')
@@ -46,11 +47,21 @@ def statistics(request):
              Test3.objects.all().filter(user=request.user),
              Test4.objects.all().filter(user=request.user),
              Test5.objects.all().filter(user=request.user)]
-    graph1 = [return_graph1_1(tests[0]), return_graph1_2(tests[0])]
-    graph2 = [return_graph2_1(tests[1]), return_graph2_2(tests[1])]
-    graph3 = return_graph3(tests[2])
-    graph4 = [return_graph4_1(tests[3]), return_graph4_2(tests[3])]
-    graph5 = [return_graph_5_1(tests[4]), return_graph_5_2(tests[4]), return_graph_5_3(tests[4])]
+    graph1 = None
+    graph2 = None
+    graph3 = None
+    graph4 = None
+    graph5 = None
+    if tests[0]:
+        graph1 = [return_graph1_1(tests[0]), return_graph1_2(tests[0])]
+    if tests[1]:
+        graph2 = [return_graph2_1(tests[1]), return_graph2_2(tests[1])]
+    if tests[2]:
+        graph3 = return_graph3(tests[2])
+    if tests[3]:
+        graph4 = [return_graph4_1(tests[3]), return_graph4_2(tests[3])]
+    if tests[4]:
+        graph5 = [return_graph_5_1(tests[4]), return_graph_5_2(tests[4]), return_graph_5_3(tests[4])]
     return render(request, 'statistics.html', {'tests': tests, 'graph1': graph1,
                                                'graph2': graph2, 'graph3': graph3, 'graph4': graph4, 'graph5': graph5})
 
@@ -140,13 +151,9 @@ def send_mail(user, new):
     text += "\nВаш новый пароль: " + new + ". Вы сможете заменить его в вашем личном кабинете."
     msg.attach(MIMEText(text, 'plain'))
     try:
-        print("0")
         server = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
-        print("01")
         server.login(addr_from, password)
-        print("1")
         server.sendmail(addr_from, user.email, msg.as_string())
-        print("2")
         server.quit()
         return 0
     except:

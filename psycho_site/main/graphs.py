@@ -1,9 +1,6 @@
 import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
-from .models import *
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from django.http import HttpResponse
 
 
 def graph_settings(ax, x, y, s):
@@ -45,7 +42,6 @@ def return_graph1_1(array):  # Первый график первого тест
 
 def return_graph1_2(array):  # Второй график первого теста, средние значения каналов в виде пирога
     y = [0, 0, 0]
-
     for i in array:
         y[0] += i.audio
         y[1] += i.visual
@@ -53,10 +49,6 @@ def return_graph1_2(array):  # Второй график первого тест
     array_len = len(array)
     for i in y:
         i /= array_len
-
-    # def func(pct, allvals):
-    #     absolute = int(pct / 100. * np.sum(allvals))
-    #     return "{:d}".format(pct, absolute)
 
     fig, ax = plt.subplots()
     ax.pie(y, autopct="%.2f%%", explode=(0.1, 0.1, 0.1), colors=('aqua', 'blueviolet', 'coral'))
@@ -109,26 +101,6 @@ def return_graph2_2(array):  # Второй график для второго �
     return data
 
 
-# def return_graph3(array):  # График для Третьего теста
-#     x = []
-#     y = []
-#     for n, i in enumerate(array):
-#         x.append(n)
-#         y.append(i.ud)
-#
-#     fig, ax = plt.subplots()
-#     ax.fill_between(x, y, color="green")
-#     plt.axhline(y=50, dashes=(6, 4), linewidth=0.8, color="black")
-#     plt.axhline(y=60, dashes=(6, 4), linewidth=0.8, color="black")
-#     plt.axhline(y=70, dashes=(6, 4), linewidth=0.8, color="black")
-#     graph_settings(ax, x, y, 5.0)
-#
-#     imgdata = StringIO()
-#     fig.savefig(imgdata, format='svg', transparent=True)
-#     imgdata.seek(0)
-#     data = imgdata.getvalue()
-#     return data
-
 def return_graph3(array):  # График для Третьего теста
     x = []
     y = []
@@ -176,6 +148,7 @@ def return_graph4_1(array):
     data = imgdata.getvalue()
     return data
 
+
 def return_graph4_2(array):
     y = [0, 0, 0]
 
@@ -187,10 +160,6 @@ def return_graph4_2(array):
     for i in y:
         i /= array_len
 
-    # def func(pct, allvals):
-    #     absolute = int(pct / 100. * np.sum(allvals))
-    #     return "{:d}".format(pct, absolute)
-
     fig, ax = plt.subplots()
     ax.pie(y, autopct="%.2f%%", explode=(0.1, 0.1, 0.1), colors=('gold', 'dodgerblue', 'red'))
 
@@ -200,6 +169,7 @@ def return_graph4_2(array):
 
     data = imgdata.getvalue()
     return data
+
 
 def return_graph_5_1(array):
     x = []
@@ -259,61 +229,3 @@ def return_graph_5_3(array):
 
     data = imgdata.getvalue()
     return data
-
-# def return_graph_5_1(array):
-#     x = []
-#     y = []
-#     for n, i in enumerate(array):
-#         x.append(n)
-#         y.append(i.sincerity)
-#
-#     fig, ax = plt.subplots()
-#     ax.plot(x, y, color="mediumvioletred", marker='o')
-#     # если зменить ax.plot на ax.fill_between, будет закрашенный,
-#     # но тогда стоит убрать marker ='o', так как может выглядеть стремно, но если хочешь проверь
-#     graph_settings(ax, x, y, 2.0)
-#
-#     imgdata = StringIO()
-#     fig.savefig(imgdata, format='svg', transparent=True)
-#     imgdata.seek(0)
-#
-#     data = imgdata.getvalue()
-#     return data
-#
-#
-# def return_graph_5_2(array):
-#     x = []
-#     y = []
-#     for n, i in enumerate(array):
-#         x.append(n)
-#         y.append(i.extrav)
-#
-#     fig, ax = plt.subplots()
-#     ax.plot(x, y, color="deepskyblue", marker='o')
-#     graph_settings(ax, x, y, 2.0)
-#
-#     imgdata = StringIO()
-#     fig.savefig(imgdata, format='svg', transparent=True)
-#     imgdata.seek(0)
-#
-#     data = imgdata.getvalue()
-#     return data
-#
-#
-# def return_graph_5_3(array):
-#     x = []
-#     y = []
-#     for n, i in enumerate(array):
-#         x.append(n)
-#         y.append(i.neuro)
-#
-#     fig, ax = plt.subplots()
-#     ax.plot(x, y, color="darkorange", marker='o')
-#     graph_settings(ax, x, y, 2.0)
-#
-#     imgdata = StringIO()
-#     fig.savefig(imgdata, format='svg', transparent=True)
-#     imgdata.seek(0)
-#
-#     data = imgdata.getvalue()
-#     return data
