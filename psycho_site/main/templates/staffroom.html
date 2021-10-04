@@ -4,7 +4,11 @@
     Staff room
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <h2>Менеджерская панель управления</h2>
-    </div>
+
+<div class="container">
+    <h2>Менеджерская панель управления</h2>
+    <br>
+    <p><a style="width: 300px" class="btn btn-dark" href="{% url 'download_emails' %}">Электронные почты для эксперимента</a></p>
+</div>
+
 {% endblock %}

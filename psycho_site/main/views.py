@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import Group, User
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
@@ -10,6 +10,7 @@ from . import psycho_tests
 from .models import *
 from .graphs import *
 import datetime
+from django.core.files.base import ContentFile
 
 
 def can_i_let_him_in(request):
@@ -20,6 +21,7 @@ def home(request):
     if not can_i_let_him_in(request):
         return redirect('login')
     return render(request, 'home.html')
+
 
 def tests(request):
     if not can_i_let_him_in(request):
@@ -178,14 +180,6 @@ def forgot_password(request):
     return render(request, 'forgot_password.html', {'message': message})
 
 
-def staffroom(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
-    if not request.user.is_staff:
-        return redirect('home')
-    return render(request, 'staffroom.html', {'cur_page': 'staffroom'})
-
-
 def test_first(request):
     if not can_i_let_him_in(request):
         return redirect('login')
@@ -193,24 +187,38 @@ def test_first(request):
     array = psycho_tests.test1
     if request.method == 'POST':
         data = forms.Form(request.POST).data
-        audio = "2, 6, 7, 13, 15, 17, 20, 24, 26, 33, 34, 36, 37, 43, 46, 48".split(',')
-        visual = "1, 5, 8, 10, 12, 14, 19, 21, 23, 27, 31, 32, 39, 40, 42, 45".split(',')
-        kinest = "3, 4, 9, 11, 16, 18, 22, 25, 28, 29, 30, 35, 38, 41, 44, 47".split(',')
+        audio = [2, 6, 7, 13, 15, 17, 20, 24, 26, 33, 34, 36, 37, 43, 46, 48]
+        visual = [1, 5, 8, 10, 12, 14, 19, 21, 23, 27, 31, 32, 39, 40, 42, 45]
+        kinest = [3, 4, 9, 11, 16, 18, 22, 25, 28, 29, 30, 35, 38, 41, 44, 47]
 
         audio_res = 0
         visual_res = 0
         kinest_res = 0
         for i in audio:
-            audio_res += (str(data.get(i.strip())) == 'yes')
+            audio_res += (str(data.get(str(i))) == 'yes')
         for i in visual:
-            visual_res += (str(data.get(i.strip())) == 'yes')
+            visual_res += (str(data.get(str(i))) == 'yes')
         for i in kinest:
-            kinest_res += (str(data.get(i.strip())) == 'yes')
+            kinest_res += (str(data.get(str(i))) == 'yes')
         message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: " \
                   + str(visual_res) + ", Кинестетический канал восприятия: " + str(kinest_res)
-        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res, date=datetime.date.today())
+        date = datetime.datetime.now()
+        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
+                             date=date.date(), time=date.time())
 
     return render(request, 'test1.html', {'questions': array, 'message': message})
+
+
+# Подсчет параметров результата в 3 тесте
+def count_res_test3(from_q, to_q, pos_q, data):
+    out_res = 35
+    for i in range(from_q, to_q):
+        res = int(data.get(str(i)))
+        if i in pos_q:
+            out_res += res
+        else:
+            out_res -= res
+    return out_res
 
 
 def test_second(request):
@@ -222,30 +230,18 @@ def test_second(request):
         data = forms.Form(request.POST).data
         rt = [3, 4, 6, 7, 9, 12, 13, 14, 17, 18]
         lt = [22, 23, 24, 25, 28, 29, 31, 32, 34, 35, 37, 38, 40]
-        rt_res = 35
-        for i in range(1, 21):
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in rt:
-                rt_res += res
-            else:
-                rt_res -= res
-        lt_res = 35
-        for i in range(21, 41):
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in lt:
-                lt_res += res
-            else:
-                lt_res -= res
 
-        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=datetime.date.today())
+        rt_res = count_res_test3(1, 21, rt, data)
+        lt_res = count_res_test3(21, 41, lt, data)
+        date = datetime.datetime.now()
+        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=date.date(), time=date.time())
+
         if rt_res <= 30:
-            message = "низкая реактивная тревожность"
+            message = "Низкая реактивная тревожность"
         elif 31 <= rt_res <= 45:
-            message = "умеренная реактивная тревожность"
+            message = "Умеренная реактивная тревожность"
         else:
-            message = "высокая реактивная тревожность"
+            message = "Высокая реактивная тревожность"
         if lt_res <= 30:
             message += ", низкая личностная тревожность"
         elif 31 <= lt_res <= 45:
@@ -271,7 +267,8 @@ def test_third(request):
                 ud_res += res
             else:
                 ud_res += 5 - res
-        Test3.objects.create(user=request.user, ud=ud_res, date=datetime.date.today())
+        date = datetime.datetime.now()
+        Test3.objects.create(user=request.user, ud=ud_res, date=date.date(), time=date.time())
         if ud_res <= 50:
             message = "У вас отсутствует депрессия"
         elif 51 <= ud_res <= 60:
@@ -283,6 +280,18 @@ def test_third(request):
     return render(request, 'test3.html', {'questions': array, 'message': message})
 
 
+# Подсчет параметров результата в 4 тесте
+def count_res_test4(questions, inverse_q, data):
+    out_res = 0
+    for i in questions:
+        res = int(data.get(str(i)))
+        if i in inverse_q:
+            out_res += 8 - res
+        else:
+            out_res += res
+    return out_res / len(questions)
+
+
 def test_fourth(request):
     if not can_i_let_him_in(request):
         return redirect('login')
@@ -290,39 +299,20 @@ def test_fourth(request):
     array = psycho_tests.test4
     if request.method == 'POST':
         data = forms.Form(request.POST).data
+
         being_q = [1, 2, 7, 8, 13, 14, 19, 20, 25, 26]
         activity_q = [3, 4, 9, 10, 15, 16, 21, 22, 27, 28]
         mood_q = [5, 6, 11, 12, 17, 18, 23, 24, 29, 30]
         inverse_q = [1, 2, 5, 6, 7, 8, 11, 12, 14, 17, 18, 19, 20,
                      23, 24, 25, 26, 29, 30]
-        being_res = 0
-        activity_res = 0
-        mood_res = 0
-        for i in being_q:
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in inverse_q:
-                being_res += 8 - res
-            else:
-                being_res += res
-        being_res /= len(being_q)
-        for i in activity_q:
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in inverse_q:
-                activity_res += 8 - res
-            else:
-                activity_res += res
-        activity_res /= len(activity_q)
-        for i in mood_q:
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in inverse_q:
-                mood_res += 8 - res
-            else:
-                mood_res += res
-        mood_res /= len(mood_q)
-        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res, date=datetime.date.today())
+
+        being_res = count_res_test4(being_q, inverse_q, data)
+        activity_res = count_res_test4(activity_q, inverse_q, data)
+        mood_res = count_res_test4(mood_q, inverse_q, data)
+
+        date = datetime.datetime.now()
+        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res,
+                             date=date.date(), time=date.time())
         message = ['', '']
         message[0] = "Активность = " + str(activity_res) + "/7, самочувствие = " + str(being_res) + \
                      "/7, настроение = " + str(mood_res) + "/7."
@@ -350,6 +340,7 @@ def test_fifth(request):
         sinc_res = 0
         extrav_res = 0
         neuro_res = 0
+
         for i in sinc_q_yes:
             sinc_res += (str(data.get(str(i))) == 'yes')
         for i in sinc_q_no:
@@ -360,7 +351,11 @@ def test_fifth(request):
             extrav_res += (str(data.get(str(i))) == 'no')
         for i in neuro_q:
             neuro_res += (str(data.get(str(i))) == 'yes')
-        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res, date=datetime.date.today())
+
+        date = datetime.datetime.now()
+        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res,
+                             date=date.date(), time=date.time())
+
         message = ['', '', '']
         message[0] = "Показатель искренности - " + str(sinc_res) + " из 9, что свидетельствует о"
         if sinc_res <= 3:
@@ -400,3 +395,38 @@ def test_fifth(request):
         else:
             message[2] += "сверхдискордант"
     return render(request, 'test5.html', {'questions': array, 'message': message})
+
+
+def staffroom(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
+    if not request.user.is_staff:
+        return redirect('home')
+    return render(request, 'staffroom.html', {'cur_page': 'staffroom'})
+
+
+# Получение спика электронных адресов пользователей.
+# Сделано для участия в студенческом конкурсе проектов.
+def download_emails(request):
+    if not can_i_let_him_in(request):
+        return redirect('login')
+    if not request.user.is_staff:
+        return redirect('home')
+
+    group1 = ""
+    group2 = ""
+    users = User.objects.all().filter(is_superuser=False, is_staff=False)
+    n = 0
+    for i in users:
+        if i.email:
+            n += 1
+            if n % 2 == 0:
+                group1 += i.email + "\n"
+            else:
+                group2 += i.email + "\n"
+
+    file_to_send = ContentFile("Группа 1:\n\n" + group1 + "\nГруппа 2:\n\n" + group2)
+    response = HttpResponse(file_to_send, 'application/x-gzip')
+    response['Content-Length'] = file_to_send.size + 11
+    response['Content-Disposition'] = 'attachment; filename="emails.txt"'
+    return response
