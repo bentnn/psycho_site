@@ -6,6 +6,9 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
+                    {% if request.user.is_staff %}
+                        <a class="nav-link {% if cur_page == 'staffroom' %} active {% endif %}" href="{% url 'staffroom' %}"><span class="material-icons">manage_accounts</span></a>
+                    {% endif %}
                     <a class="nav-link {% if cur_page == 'account' %} active {% endif %}" href="{% url 'account' %}"><span class="material-icons">person</span></a>
                     <a class="nav-link" href="{% url 'signout' %}"><span class="material-icons">logout</span></a>
             </div>

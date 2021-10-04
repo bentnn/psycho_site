@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -9,6 +9,7 @@ class Test1(models.Model):
     visual = models.IntegerField()
     kinest = models.IntegerField()
     date = models.DateField(default=datetime.date(2021, 7, 20))
+    time = models.TimeField(default=datetime.time(12, 0))
 
 
 class Test2(models.Model):
@@ -16,12 +17,14 @@ class Test2(models.Model):
     rt = models.IntegerField()
     lt = models.IntegerField()
     date = models.DateField(default=datetime.date(2021, 7, 20))
+    time = models.TimeField(default=datetime.time(12, 0))
 
 
 class Test3(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     ud = models.IntegerField()
     date = models.DateField(default=datetime.date(2021, 7, 20))
+    time = models.TimeField(default=datetime.time(12, 0))
 
 
 class Test4(models.Model):
@@ -30,6 +33,8 @@ class Test4(models.Model):
     being = models.IntegerField()
     mood = models.IntegerField()
     date = models.DateField(default=datetime.date(2021, 7, 20))
+    time = models.TimeField(default=datetime.time(12, 0))
+
 
 class Test5(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
@@ -37,3 +42,4 @@ class Test5(models.Model):
     extrav = models.IntegerField()
     neuro = models.IntegerField()
     date = models.DateField(default=datetime.date(2021, 7, 20))
+    time = models.TimeField(default=datetime.time(12, 0))

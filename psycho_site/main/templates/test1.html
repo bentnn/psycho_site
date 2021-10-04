@@ -5,14 +5,19 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h2>Тест на канал восприятия</h2>
-        <br>
         {% if message %}
-            <h5>Результат прохождения теста:</h5>
-            <p>{{ message }}</p>
-            <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+            <h2 class="text-center">Тест на канал восприятия</h2>
+            <br>
+            <div class="container border border-dark rounded border-2" style="max-width: 600px; margin: auto">
+                <div class="text-center">
+                    <h5>Результат прохождения теста:</h5>
+                    <p>{{ message }}</p>
+                    <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+                </div>
+            </div>
         {% else %}
-
+            <h2>Тест на канал восприятия</h2>
+            <br>
         <h5>Инструкция к тесту: Прочитайте предлагаемые утверждения.
             Выберите "Да", если Вы согласны с данным утверждением, и "Нет" - если не согласны.</h5>
         <h5>Необходимо ответить на все вопросы.</h5>

@@ -5,15 +5,21 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h2>Теста Г. Айзенка</h2>
-        <br>
         {% if message %}
-            <h5>Результат прохождения теста:</h5>
-            <p>{{ message.0 }}</p>
-            <p>{{ message.1 }}</p>
-            <p>{{ message.2 }}</p>
-            <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+            <h2 class="text-center">Теста Г. Айзенка</h2>
+            <br>
+            <div class="container border border-dark rounded border-2" style="max-width: 600px; margin: auto">
+                <div class="text-center">
+                    <h5>Результат прохождения теста:</h5>
+                    <p>{{ message.0 }}</p>
+                    <p>{{ message.1 }}</p>
+                    <p>{{ message.2 }}</p>
+                    <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+                </div>
+            </div>
         {% else %}
+            <h2>Теста Г. Айзенка</h2>
+            <br>
 
             <h5>Инструкция к тесту: Прочитайте предлагаемые утверждения.
                 Выберите "Да", если Вы согласны с данным утверждением, и "Нет" - если не согласны.</h5>

@@ -5,13 +5,19 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h2>Оценка уровня реактивной и личностной тревожности</h2>
-        <br>
         {% if message %}
-            <h5>Результат прохождения теста:</h5>
-            <p>{{ message }}</p>
-            <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+            <h2 class="text-center">Оценка уровня реактивной и личностной тревожности</h2>
+            <br>
+            <div class="container border border-dark rounded border-2" style="max-width: 600px; margin: auto">
+                <div class="text-center">
+                    <h5>Результат прохождения теста:</h5>
+                    <p>{{ message }}</p>
+                    <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+                </div>
+            </div>
         {% else %}
+            <h2>Оценка уровня реактивной и личностной тревожности</h2>
+            <br>
             <h5>Инструкция к тесту: Прочитайте внимательно каждое
                 из приведенных ниже предложений и зачеркните
                 соответствующую цифру справа в зависимости от

@@ -5,13 +5,19 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h2>Диагностика психических состояний и свойств лисности</h2>
-        <br>
         {% if message %}
-            <h5>Результат прохождения теста:</h5>
-            <p>{{ message }}</p>
-            <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+            <h2 class="text-center">Диагностика психических состояний и свойств лисности</h2>
+            <br>
+            <div class="container border border-dark rounded border-2" style="max-width: 600px; margin: auto">
+            <div class="text-center">
+                <h5>Результат прохождения теста:</h5>
+                <p>{{ message }}</p>
+                <p><a class="btn btn-dark" href="{% url 'home' %}">Ок</a></p>
+            </div>
+            </div>
         {% else %}
+            <h2>Диагностика психических состояний и свойств лисности</h2>
+            <br>
             <h5>Инструкция к тесту: Прочитайте внимательно каждое
                 из приведенных ниже предложений и зачеркните
                 соответствующую цифру справа в зависимости от
@@ -31,19 +37,19 @@
                     <p>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio1" value="1" required>
-                        <label class="form-check-label" for="inlineRadio1">A</label>
+                        <label class="form-check-label">A</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio2" value="2" required>
-                        <label class="form-check-label" for="inlineRadio2">B</label>
+                        <label class="form-check-label">B</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio3" value="3" required>
-                        <label class="form-check-label" for="inlineRadio2">C</label>
+                        <label class="form-check-label">C</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="inlineRadio4" value="4" required>
-                        <label class="form-check-label" for="inlineRadio2">D</label>
+                        <label class="form-check-label">D</label>
                     </div>
                     </p>
                 {% endfor %}
