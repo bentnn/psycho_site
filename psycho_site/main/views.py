@@ -177,12 +177,14 @@ def forgot_password(request):
 
     return render(request, 'forgot_password.html', {'message': message})
 
+
 def staffroom(request):
     if not can_i_let_him_in(request):
         return redirect('login')
     if not request.user.is_staff:
         return redirect('home')
     return render(request, 'staffroom.html', {'cur_page': 'staffroom'})
+
 
 def test_first(request):
     if not can_i_let_him_in(request):
