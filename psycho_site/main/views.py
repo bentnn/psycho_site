@@ -10,6 +10,7 @@ from . import psycho_tests
 from .models import *
 from .graphs import *
 import datetime
+import pytz
 from django.core.files.base import ContentFile
 
 
@@ -202,7 +203,7 @@ def test_first(request):
             kinest_res += (str(data.get(str(i))) == 'yes')
         message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: " \
                   + str(visual_res) + ", Кинестетический канал восприятия: " + str(kinest_res)
-        date = datetime.datetime.now()
+        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
                              date=date.date(), time=date.time())
 
@@ -233,7 +234,7 @@ def test_second(request):
 
         rt_res = count_res_test3(1, 21, rt, data)
         lt_res = count_res_test3(21, 41, lt, data)
-        date = datetime.datetime.now()
+        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=date.date(), time=date.time())
 
         if rt_res <= 30:
@@ -267,7 +268,7 @@ def test_third(request):
                 ud_res += res
             else:
                 ud_res += 5 - res
-        date = datetime.datetime.now()
+        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test3.objects.create(user=request.user, ud=ud_res, date=date.date(), time=date.time())
         if ud_res <= 50:
             message = "У вас отсутствует депрессия"
@@ -310,7 +311,7 @@ def test_fourth(request):
         activity_res = count_res_test4(activity_q, inverse_q, data)
         mood_res = count_res_test4(mood_q, inverse_q, data)
 
-        date = datetime.datetime.now()
+        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res,
                              date=date.date(), time=date.time())
         message = ['', '']
@@ -352,7 +353,7 @@ def test_fifth(request):
         for i in neuro_q:
             neuro_res += (str(data.get(str(i))) == 'yes')
 
-        date = datetime.datetime.now()
+        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res,
                              date=date.date(), time=date.time())
 
