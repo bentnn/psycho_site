@@ -414,20 +414,19 @@ def download_emails(request):
     if not request.user.is_staff:
         return redirect('home')
 
-    group1 = ""
-    group2 = ""
-    users = User.objects.all().filter(is_superuser=False, is_staff=False)
-    n = 0
-    for i in users:
-        if i.email:
-            n += 1
-            if n % 2 == 0:
-                group1 += i.email + "\n"
-            else:
-                group2 += i.email + "\n"
+    users = list(filter(lambda user: user.email, User.objects.all().filter(is_superuser=False, is_staff=False)))
+    group1 = users[:int(len(users) / 2)]
+    group2 = users[len(group1):]
+    emails1 = ", ".join([user.email for user in group1])
+    emails2 = ", ".join([user.email for user in group2])
+    usernames1 = ", ".join([user.username for user in group1])
+    usernames2 = ", ".join([user.username for user in group2])
 
-    file_to_send = ContentFile("Группа 1:\n\n" + group1 + "\nГруппа 2:\n\n" + group2)
-    response = HttpResponse(file_to_send, 'application/x-gzip')
-    response['Content-Length'] = file_to_send.size + 11
-    response['Content-Disposition'] = 'attachment; filename="emails.txt"'
+    file_to_send = ContentFile(f"Всего участников эксперимента: {len(users)}\n\n"
+                               f"Группа 1(колличество: {len(group1)}):\n" + usernames1 +
+                               "\nЭлектронные почты:\n" + emails1 +
+                               f"\n\nГруппа 2(колличество: {len(group2)}):\n" + usernames2 +
+                               "\nЭлектронные почты:\n" + emails2)
+    response = HttpResponse(file_to_send, 'text/plain')
+    response['Content-Disposition'] = 'attachment; filename="experiment.txt"'
     return response
