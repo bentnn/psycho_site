@@ -3,48 +3,34 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from django import forms
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from . import psycho_tests
+from .psycho_tests import about_tests
 from .models import *
 from .graphs import *
+from .mail_sendler import send_mail
+from .test_counters import *
 import datetime
 import pytz
 from django.core.files.base import ContentFile
+from django.contrib.auth.decorators import login_required
 
 
-def can_i_let_him_in(request):
-    return request.user.is_authenticated and not request.user.is_superuser
-
-
+@login_required(login_url='login')
 def home(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
     return render(request, 'home.html')
 
 
+@login_required(login_url='login')
 def tests(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
-    res = [None for _ in range(5)]
-    res[0] = Test1.objects.all().filter(user=request.user).last()
-    res[1] = Test2.objects.all().filter(user=request.user).last()
-    res[2] = Test3.objects.all().filter(user=request.user).last()
-    res[3] = Test4.objects.all().filter(user=request.user).last()
-    res[4] = Test5.objects.all().filter(user=request.user).last()
-    return render(request, 'tests.html', {'res': res})
+    return render(request, 'tests.html', {'tests': about_tests})
 
 
+@login_required(login_url='login')
 def account(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
     return render(request, 'account.html', {'cur_page': 'account'})
 
 
+@login_required(login_url='login')
 def statistics(request):
-    if not can_i_let_him_in(request):
-        return redirect('statistics')
     tests = [Test1.objects.all().filter(user=request.user),
              Test2.objects.all().filter(user=request.user),
              Test3.objects.all().filter(user=request.user),
@@ -104,65 +90,6 @@ def signout_view(request):
     return redirect('login')
 
 
-def change_password(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
-    message = None
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            message = "Ваш пароль был успешно изменен"
-        else:
-            message = "Форма смены пароля невалидна"
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'change_password.html', {'form': form, 'message': message})
-
-
-def change_info(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
-    if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        request.user.first_name = first_name
-        request.user.last_name = last_name
-        request.user.email = email
-        request.user.save()
-        return redirect('account')
-
-    return render(request, 'change_info.html')
-
-
-def send_mail(user, new):
-    addr_from = "hse.tests@yandex.ru"
-    password = "ihoqgelsccaxmyha"
-
-    msg = MIMEMultipart()
-    msg['From'] = addr_from
-    msg['To'] = user.email
-    msg['Subject'] = 'Информация смене пароля'
-
-    text = "Здравствуйте"
-    if user.first_name != "":
-        text += ", " + user.first_name
-    text += ". На сайте психологических тестов от высшей школы экономики была активирована функция " \
-            "'восстановить пароль' для вашего аккаунта."
-    text += "\nВаш новый пароль: " + new + ". Вы сможете заменить его в вашем личном кабинете."
-    msg.attach(MIMEText(text, 'plain'))
-    try:
-        server = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
-        server.login(addr_from, password)
-        server.sendmail(addr_from, user.email, msg.as_string())
-        server.quit()
-        return 0
-    except:
-        return 1
-
-
 def forgot_password(request):
     message = None
     if request.method == 'POST':
@@ -181,11 +108,40 @@ def forgot_password(request):
     return render(request, 'forgot_password.html', {'message': message})
 
 
-def test_first(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
+@login_required(login_url='login')
+def change_password(request):
     message = None
-    array = psycho_tests.test1
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            message = "Ваш пароль был успешно изменен"
+        else:
+            message = "Форма смены пароля невалидна"
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'change_password.html', {'form': form, 'message': message})
+
+
+@login_required(login_url='login')
+def change_info(request):
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.email = email
+        request.user.save()
+        return redirect('account')
+
+    return render(request, 'change_info.html')
+
+
+@login_required(login_url='login')
+def test1(request):
+    message = None
     if request.method == 'POST':
         data = forms.Form(request.POST).data
         audio = [2, 6, 7, 13, 15, 17, 20, 24, 26, 33, 34, 36, 37, 43, 46, 48]
@@ -206,27 +162,12 @@ def test_first(request):
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
                              date=date.date(), time=date.time())
-
-    return render(request, 'test1.html', {'questions': array, 'message': message})
-
-
-# Подсчет параметров результата в 3 тесте
-def count_res_test3(from_q, to_q, pos_q, data):
-    out_res = 35
-    for i in range(from_q, to_q):
-        res = int(data.get(str(i)))
-        if i in pos_q:
-            out_res += res
-        else:
-            out_res -= res
-    return out_res
+    return render(request, 'test_page.html', {'test': about_tests['test1'], 'message': message})
 
 
-def test_second(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
+@login_required(login_url='login')
+def test2(request):
     message = None
-    array = psycho_tests.test2
     if request.method == 'POST':
         data = forms.Form(request.POST).data
         rt = [3, 4, 6, 7, 9, 12, 13, 14, 17, 18]
@@ -249,14 +190,12 @@ def test_second(request):
             message += ", умеренная личностная тревожность"
         else:
             message += ", высокая личностная тревожность"
-    return render(request, 'test2.html', {'questions': array, 'message': message})
+    return render(request, 'test_page.html', {'test': about_tests['test2'], 'message': message})
 
 
-def test_third(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
+@login_required(login_url='login')
+def test3(request):
     message = None
-    array = psycho_tests.test3
     if request.method == 'POST':
         data = forms.Form(request.POST).data
         ud = [1, 3, 4, 7, 8, 9, 10, 13, 15, 19]
@@ -278,26 +217,12 @@ def test_third(request):
             message = "У вас субдепрессивное состояние или маскированная депрессия"
         else:
             message = "У вас истинное депрессивное состояние"
-    return render(request, 'test3.html', {'questions': array, 'message': message})
+    return render(request, 'test_page.html', {'test': about_tests['test3'], 'message': message})
 
 
-# Подсчет параметров результата в 4 тесте
-def count_res_test4(questions, inverse_q, data):
-    out_res = 0
-    for i in questions:
-        res = int(data.get(str(i)))
-        if i in inverse_q:
-            out_res += 8 - res
-        else:
-            out_res += res
-    return out_res / len(questions)
-
-
-def test_fourth(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
+@login_required(login_url='login')
+def test4(request):
     message = None
-    array = psycho_tests.test4
     if request.method == 'POST':
         data = forms.Form(request.POST).data
 
@@ -323,14 +248,12 @@ def test_fourth(request):
         m_proc = 100 - b_proc - a_proc
         message[1] = "В процентном соотношении: активность - {:.2f}%, самочувствие - " \
                      "{:.2f}%, настроение - {:.2f}%".format(a_proc, b_proc, m_proc)
-    return render(request, 'test4.html', {'questions': array, 'message': message})
+    return render(request, 'test_page.html', {'test': about_tests['test4'], 'message': message})
 
 
-def test_fifth(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
+@login_required(login_url='login')
+def test5(request):
     message = None
-    array = psycho_tests.test5
     if request.method == 'POST':
         data = forms.Form(request.POST).data
         sinc_q_yes = [6, 24, 36]
@@ -395,12 +318,11 @@ def test_fifth(request):
             message[2] += "дискордант"
         else:
             message[2] += "сверхдискордант"
-    return render(request, 'test5.html', {'questions': array, 'message': message})
+    return render(request, 'test_page.html', {'test': about_tests['test5'], 'message': message})
 
 
+@login_required(login_url='login')
 def staffroom(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
     if not request.user.is_staff:
         return redirect('home')
     return render(request, 'staffroom.html', {'cur_page': 'staffroom'})
@@ -408,9 +330,8 @@ def staffroom(request):
 
 # Получение спика электронных адресов пользователей.
 # Сделано для участия в студенческом конкурсе проектов.
+@login_required(login_url='login')
 def download_emails(request):
-    if not can_i_let_him_in(request):
-        return redirect('login')
     if not request.user.is_staff:
         return redirect('home')
 

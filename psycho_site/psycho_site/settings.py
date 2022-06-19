@@ -119,8 +119,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = 'C:/Users/Kirill/Desktop/psycho_site/psycho_site/static'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # For host
 #STATIC_ROOT = '/home/c/cw97231/psycho/public_html/psycho_site/static'
