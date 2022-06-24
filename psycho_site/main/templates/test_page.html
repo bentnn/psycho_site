@@ -23,7 +23,7 @@
 			<form method="post">
 				{% csrf_token %}
 				{% for i in test.questions %}
-					<p>{{ i }}</p>
+					<p>{{ forloop.counter }}. {{ i }}</p>
 					<p>
 						{% with forloop.counter as counter %}
 						{% for answer in test.answers %}

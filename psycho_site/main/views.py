@@ -148,17 +148,13 @@ def test1(request):
         visual = [1, 5, 8, 10, 12, 14, 19, 21, 23, 27, 31, 32, 39, 40, 42, 45]
         kinest = [3, 4, 9, 11, 16, 18, 22, 25, 28, 29, 30, 35, 38, 41, 44, 47]
 
-        audio_res = 0
-        visual_res = 0
-        kinest_res = 0
-        for i in audio:
-            audio_res += (str(data.get(str(i))) == 'yes')
-        for i in visual:
-            visual_res += (str(data.get(str(i))) == 'yes')
-        for i in kinest:
-            kinest_res += (str(data.get(str(i))) == 'yes')
-        message = "Аудиальный канал восприятия: " + str(audio_res) + ", Визуальный канал восприятия: " \
-                  + str(visual_res) + ", Кинестетический канал восприятия: " + str(kinest_res)
+        counter = lambda array: sum(str(data.get(str(i))) == 'yes' for i in array)
+        audio_res = counter(audio)
+        visual_res = counter(visual)
+        kinest_res = counter(kinest)
+        message = f"Аудиальный канал восприятия: {audio_res}, " \
+                  f"Визуальный канал восприятия: {visual_res}, " \
+                  f"Кинестетический канал восприятия: {kinest_res}"
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
                              date=date.date(), time=date.time())
@@ -173,8 +169,14 @@ def test2(request):
         rt = [3, 4, 6, 7, 9, 12, 13, 14, 17, 18]
         lt = [22, 23, 24, 25, 28, 29, 31, 32, 34, 35, 37, 38, 40]
 
-        rt_res = count_res_test3(1, 21, rt, data)
-        lt_res = count_res_test3(21, 41, lt, data)
+        rt_res = 35 + sum(int(data.get(str(i))) if i in rt
+                          else -int(data.get(str(i)))
+                          for i in range(1, 21))
+        lt_res = 35 + sum(int(data.get(str(i))) if i in lt
+                          else -int(data.get(str(i)))
+                          for i in range(21, 41))
+        # rt_res = count_res_test3(1, 21, rt, data)
+        # lt_res = count_res_test3(21, 41, lt, data)
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=date.date(), time=date.time())
 
@@ -199,14 +201,9 @@ def test3(request):
     if request.method == 'POST':
         data = forms.Form(request.POST).data
         ud = [1, 3, 4, 7, 8, 9, 10, 13, 15, 19]
-        ud_res = 0
-        for i in range(1, 21):
-            pos = str(i)
-            res = int(data.get(pos))
-            if i in ud:
-                ud_res += res
-            else:
-                ud_res += 5 - res
+        ud_res = sum(int(data.get(str(i))) if i in ud
+                     else 5 - int(data.get(str(i)))
+                     for i in range(1, 21))
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test3.objects.create(user=request.user, ud=ud_res, date=date.date(), time=date.time())
         if ud_res <= 50:
@@ -232,22 +229,32 @@ def test4(request):
         inverse_q = [1, 2, 5, 6, 7, 8, 11, 12, 14, 17, 18, 19, 20,
                      23, 24, 25, 26, 29, 30]
 
-        being_res = count_res_test4(being_q, inverse_q, data)
-        activity_res = count_res_test4(activity_q, inverse_q, data)
-        mood_res = count_res_test4(mood_q, inverse_q, data)
+        counter = lambda questions: \
+            sum(int(data.get(str(i))) if i in inverse_q
+                else 8 - int(data.get(str(i)))
+                for i in questions) / len(questions)
+
+        being_res = counter(being_q)
+        activity_res = counter(activity_q)
+        mood_res = counter(mood_q)
+        # being_res = count_res_test4(being_q, inverse_q, data)
+        # activity_res = count_res_test4(activity_q, inverse_q, data)
+        # mood_res = count_res_test4(mood_q, inverse_q, data)
 
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res,
                              date=date.date(), time=date.time())
-        message = ['', '']
-        message[0] = "Активность = " + str(activity_res) + "/7, самочувствие = " + str(being_res) + \
-                     "/7, настроение = " + str(mood_res) + "/7."
-        sum = activity_res + being_res + mood_res
-        a_proc = activity_res / sum * 100
-        b_proc = being_res / sum * 100
+        sum_of_res = activity_res + being_res + mood_res
+        a_proc = activity_res / sum_of_res * 100
+        b_proc = being_res / sum_of_res * 100
         m_proc = 100 - b_proc - a_proc
-        message[1] = "В процентном соотношении: активность - {:.2f}%, самочувствие - " \
-                     "{:.2f}%, настроение - {:.2f}%".format(a_proc, b_proc, m_proc)
+        message = "Активность = {}/7, " \
+                  "самочувствие = {}/7, " \
+                  "настроение = {}/7. " \
+                  "В процентном соотношении: активность - {:.2f}%, " \
+                  "самочувствие - {:.2f}%, " \
+                  "настроение - {:.2f}%".\
+            format(activity_res, being_res, mood_res, a_proc, b_proc, m_proc)
     return render(request, 'test_page.html', {'test': about_tests['test4'], 'message': message})
 
 
@@ -261,20 +268,26 @@ def test5(request):
         extrav_q_yes = [1, 3, 8, 10, 13, 17, 22, 27, 39, 44, 46, 49, 53, 56]
         extrav_q_no = [5, 15, 20, 29, 32, 34, 37, 41, 51]
         neuro_q = [2, 4, 7, 9, 11, 14, 16, 19, 21, 23, 26, 28, 31, 33, 35, 38, 40, 43, 45, 47, 50, 52, 55, 57]
-        sinc_res = 0
-        extrav_res = 0
-        neuro_res = 0
+        # sinc_res = 0
+        # extrav_res = 0
+        # neuro_res = 0
 
-        for i in sinc_q_yes:
-            sinc_res += (str(data.get(str(i))) == 'yes')
-        for i in sinc_q_no:
-            sinc_res += (str(data.get(str(i))) == 'no')
-        for i in extrav_q_yes:
-            extrav_res += (str(data.get(str(i))) == 'yes')
-        for i in extrav_q_no:
-            extrav_res += (str(data.get(str(i))) == 'no')
-        for i in neuro_q:
-            neuro_res += (str(data.get(str(i))) == 'yes')
+        counter = lambda array, value:\
+            sum(str(data.get(str(i))) == value for i in array)
+
+        sinc_res = counter(sinc_q_yes, 'yes') + counter(sinc_q_no, 'no')
+        extrav_res = counter(extrav_q_yes, 'yes') + counter(extrav_q_no, 'no')
+        neuro_res = counter(neuro_q, 'yes')
+        # for i in sinc_q_yes:
+        #     sinc_res += (str(data.get(str(i))) == 'yes')
+        # for i in sinc_q_no:
+        #     sinc_res += (str(data.get(str(i))) == 'no')
+        # for i in extrav_q_yes:
+        #     extrav_res += (str(data.get(str(i))) == 'yes')
+        # for i in extrav_q_no:
+        #     extrav_res += (str(data.get(str(i))) == 'no')
+        # for i in neuro_q:
+        #     neuro_res += (str(data.get(str(i))) == 'yes')
 
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res,
@@ -318,7 +331,18 @@ def test5(request):
             message[2] += "дискордант"
         else:
             message[2] += "сверхдискордант"
-    return render(request, 'test_page.html', {'test': about_tests['test5'], 'message': message})
+    return render(request, 'test_page.html', {'test': about_tests['test5'], 'message': '. '.join(message)})
+
+
+@login_required(login_url='login')
+def test6(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        positive_effect = sum(int(data[str(i)]) for i in [1, 3, 5, 9, 10, 12, 14, 16, 17, 19])
+        negative_effect = sum(int(data[str(i)]) for i in [2, 4, 6, 7, 8, 11, 13, 15, 18, 20])
+        message = f"P - {positive_effect}, N - {negative_effect}"
+    return render(request, 'test_page.html', {'test': about_tests['test6'], 'message': message})
 
 
 @login_required(login_url='login')
