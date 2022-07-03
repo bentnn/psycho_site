@@ -12,6 +12,7 @@ import datetime
 import pytz
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
+from .test_answers import *
 
 
 @login_required(login_url='login')
@@ -253,7 +254,7 @@ def test4(request):
                   "настроение = {}/7. " \
                   "В процентном соотношении: активность - {:.2f}%, " \
                   "самочувствие - {:.2f}%, " \
-                  "настроение - {:.2f}%".\
+                  "настроение - {:.2f}%". \
             format(activity_res, being_res, mood_res, a_proc, b_proc, m_proc)
     return render(request, 'test_page.html', {'test': about_tests['test4'], 'message': message})
 
@@ -272,7 +273,7 @@ def test5(request):
         # extrav_res = 0
         # neuro_res = 0
 
-        counter = lambda array, value:\
+        counter = lambda array, value: \
             sum(str(data.get(str(i))) == value for i in array)
 
         sinc_res = counter(sinc_q_yes, 'yes') + counter(sinc_q_no, 'no')
@@ -341,8 +342,89 @@ def test6(request):
         data = forms.Form(request.POST).data
         positive_effect = sum(int(data[str(i)]) for i in [1, 3, 5, 9, 10, 12, 14, 16, 17, 19])
         negative_effect = sum(int(data[str(i)]) for i in [2, 4, 6, 7, 8, 11, 13, 15, 18, 20])
-        message = f"P - {positive_effect}, N - {negative_effect}"
+
+        message = 'У вас:\n'
+        message += count_message_test6(positive_effect, 22, 39, 'позитивного')
+        message += count_message_test6(negative_effect, 15, 32, 'негативного')
+        message += '\nВысокий уровень позитивного аффекта – состояние приятной вовлеченности, ' \
+                   'высокой энергичности и полной концентрации. Низкий уровень - состояние уныния и вялости.\n\n' \
+                   'Высокий уровень негативного аффекта – состояние субъективно переживаемого страдания, ' \
+                   'неприятной вовлеченности (различной по содержанию – это может быть гнев, отвращение, презрение, ' \
+                   'вина, страх, раздражительность). Низкий уровень - состояние спокойствия и безмятежности.'
+
     return render(request, 'test_page.html', {'test': about_tests['test6'], 'message': message})
+
+
+@login_required(login_url='login')
+def test7(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+
+        counter = lambda array: sum(int(data[str(i)]) for i in array)
+        depression = counter([3, 5, 10, 13, 16, 17, 21])
+        anxiety = counter([2, 4, 7, 9, 15, 19, 20])
+        stress = counter([1, 6, 8, 11, 12, 14, 18])
+        message = ''
+        for name, answers, number in zip(
+            ['Шкала депрессии', 'Шкала тревоги', 'Шкала стресса'],
+            [depression_answers, anxiety_answers, stress_asnwers],
+            [depression, anxiety, stress]
+        ):
+            message += f"{name}:\n"
+            message += next(ans for scale, ans in answers.items() if number <= scale)
+            message += '\n'
+
+    return render(request, 'test_page.html', {'test': about_tests['test7'], 'message': message})
+
+
+@login_required(login_url='login')
+def test8(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        result = sum(int(data[str(i)]) for i in [1, 3, 4, 7, 10]) + \
+                 sum(3 - int(data[str(i)]) for i in [2, 5, 6, 8, 9])
+        message = 'Ваша самооценка на данный момент:\n'
+        if result <= 15:
+            message += 'Ощущение неуверенности в себе. ' \
+                       'Болезненное переживание критических замечаний в свой адрес.' \
+                       ' Склонность подстраиваться под мнение других людей.' \
+                       ' Избыточная застенчивость и скромность'
+        else:
+            message += 'Переживание уверенности в себе и своих поступках. ' \
+                       'Склонность адекватно реагировать на критику и замечания других.' \
+                       ' Способность трезво оценивать свои действия'
+    return render(request, 'test_page.html', {'test': about_tests['test8'], 'message': message})
+
+
+@login_required(login_url='login')
+def test9(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        # восходящие
+        answers = {i: int(data[str(i)]) for i in [2, 6, 8, 9, 10]}
+        # низходящие
+        answers.update({i: 8 - int(data[str(i)]) for i in [3, 5]})
+
+        personal = sum(answers[i] for i in [3, 5, 8])
+        eventful = sum(answers[i] for i in [6, 9])
+        existential = sum(answers[i] for i in [2, 10])
+        general = sum(answers.values())
+
+        message = ''
+        for name, answers, number in zip(
+            ['Шкала личностного самообладания', 'Шкала событийного самообладания',
+             'Шкала экзистенциального самообладания', 'Общий показатель самообладания'],
+            [personal_answers, eventful_answers, existential_answers, general_answers],
+            [personal, eventful, existential, general]
+        ):
+            message += f'{name}:\n'
+            message += next(ans for scale, ans in answers.items() if number <= scale)
+            message += '\n\n'
+
+    return render(request, 'test_page.html', {'test': about_tests['test9'], 'message': message})
 
 
 @login_required(login_url='login')

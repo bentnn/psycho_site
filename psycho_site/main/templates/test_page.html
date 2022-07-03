@@ -11,7 +11,7 @@
             <div class="container border border-dark rounded border-2" style="max-width: 600px; margin: auto">
                 <div class="text-center">
                     <h5>Результат прохождения теста:</h5>
-                    <p>{{ message }}</p>
+                    <p>{{ message|linebreaksbr }}</p>
                     <p><a class="btn btn-dark" href="{% url 'home' %}">Вернуться на домашнюю страницу</a></p>
                 </div>
             </div>
