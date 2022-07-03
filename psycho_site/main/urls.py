@@ -21,6 +21,8 @@ urlpatterns = [
     path('test7', views.test7, name='test7'),
     path('test8', views.test8, name='test8'),
     path('test9', views.test9, name='test9'),
+    path('test10', views.test10, name='test10'),
+    path('test11', views.test11, name='test11'),
     path('staffroom', views.staffroom, name='staffroom'),
     path('download_emails', views.download_emails, name='download_emails'),
 ]

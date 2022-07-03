@@ -428,6 +428,45 @@ def test9(request):
 
 
 @login_required(login_url='login')
+def test10(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        emotional = sum(int(data[str(i)]) for i in range(1, 4))
+        social = sum(int(data[str(i)]) for i in range(4, 9))
+        psycho = sum(int(data[str(i)]) for i in range(9, 15))
+        general = emotional + social + psycho
+        message = f'Эмоциональное благополучие: {emotional}/15\n' \
+                  f'Социальное благополучие: {social}/25\n' \
+                  f'Психологическое благополучие: {psycho}/30\n' \
+                  f'Общий показатель благополучия: {general}/70\n\n'
+
+        message += 'Состояние благополучия по К. Кизу: '
+        if all(int(data[str(i)]) in [0, 1] for i in range(1, 4)) and \
+                sum(int(data[str(i)]) in [0, 1] for i in range(4, 15)) >= 6:
+            message += 'угнетение'
+        elif sum(int(data[str(i)]) in [4, 5] for i in range(1, 4)) >= 1 and \
+                sum(int(data[str(i)]) in [4, 5] for i in range(4, 15)) >= 6:
+            message += 'процветание'
+        else:
+            message += 'умеренное благополучие'
+
+        message += '\n\nИнтерпритация общего показателя благополучия: {}'.format(
+            next(ans for scale, ans in general_resilience.items() if general <= scale)
+        )
+
+    return render(request, 'test_page.html', {'test': about_tests['test10'], 'message': message})
+
+
+@login_required(login_url='login')
+def test11(request):
+    message = None
+    if request.method == 'POST':
+        pass
+    return render(request, 'test_page.html', {'test': about_tests['test11'], 'message': message})
+
+
+@login_required(login_url='login')
 def staffroom(request):
     if not request.user.is_staff:
         return redirect('home')

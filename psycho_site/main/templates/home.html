@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Psycho site
@@ -9,7 +10,7 @@
         <div class="row row-cols-1 row-cols-md-2 g-4">
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://image.flaticon.com/icons/png/512/2916/2916315.png" class="card-img-top" alt="...">
+                    <img src="{% static 'main/home/test.png' %}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Тесты</h5>
                         <p class="card-text">Тест на канал восприятия, оценка уровня тревожности,
@@ -20,7 +21,7 @@
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://d338t8kmirgyke.cloudfront.net/icons/icon_pngs/000/007/878/original/graphical.png" class="card-img-top" alt="...">
+                    <img src="{% static 'main/home/stats.png' %}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Статистика</h5>
                         <p class="card-text">Статистика по всем пройденым тестам</p>
@@ -30,7 +31,7 @@
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://cdn.iconscout.com/icon/free/png-512/recommendation-438971.png" class="card-img-top" alt="...">
+                    <img src="{% static 'main/home/like.png' %}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Рекомендации</h5>
                         <p class="card-text">Рекомендации, основанные на диагностике ваших результатов</p>
@@ -40,7 +41,7 @@
             </div>
             <div class="col">
                 <div class="card border-dark">
-                    <img src="https://i.pinimg.com/474x/b8/61/ce/b861ce6f8dce209f494517101782d18e.jpg" class="card-img-top" alt="...">
+                    <img src="{% static 'main/home/gym.png' %}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Тренажеры</h5>
                         <p class="card-text">Тренажеры для улучшения личностных качеств</p>
