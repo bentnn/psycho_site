@@ -159,7 +159,8 @@ def test1(request):
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
                              date=date.date(), time=date.time())
-    return render(request, 'test_page.html', {'test': about_tests['test1'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test1'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -176,8 +177,6 @@ def test2(request):
         lt_res = 35 + sum(int(data.get(str(i))) if i in lt
                           else -int(data.get(str(i)))
                           for i in range(21, 41))
-        # rt_res = count_res_test3(1, 21, rt, data)
-        # lt_res = count_res_test3(21, 41, lt, data)
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=date.date(), time=date.time())
 
@@ -193,7 +192,8 @@ def test2(request):
             message += ", умеренная личностная тревожность"
         else:
             message += ", высокая личностная тревожность"
-    return render(request, 'test_page.html', {'test': about_tests['test2'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test2'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -215,7 +215,8 @@ def test3(request):
             message = "У вас субдепрессивное состояние или маскированная депрессия"
         else:
             message = "У вас истинное депрессивное состояние"
-    return render(request, 'test_page.html', {'test': about_tests['test3'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test3'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -238,9 +239,6 @@ def test4(request):
         being_res = counter(being_q)
         activity_res = counter(activity_q)
         mood_res = counter(mood_q)
-        # being_res = count_res_test4(being_q, inverse_q, data)
-        # activity_res = count_res_test4(activity_q, inverse_q, data)
-        # mood_res = count_res_test4(mood_q, inverse_q, data)
 
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res,
@@ -256,7 +254,8 @@ def test4(request):
                   "самочувствие - {:.2f}%, " \
                   "настроение - {:.2f}%". \
             format(activity_res, being_res, mood_res, a_proc, b_proc, m_proc)
-    return render(request, 'test_page.html', {'test': about_tests['test4'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test4'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -269,9 +268,6 @@ def test5(request):
         extrav_q_yes = [1, 3, 8, 10, 13, 17, 22, 27, 39, 44, 46, 49, 53, 56]
         extrav_q_no = [5, 15, 20, 29, 32, 34, 37, 41, 51]
         neuro_q = [2, 4, 7, 9, 11, 14, 16, 19, 21, 23, 26, 28, 31, 33, 35, 38, 40, 43, 45, 47, 50, 52, 55, 57]
-        # sinc_res = 0
-        # extrav_res = 0
-        # neuro_res = 0
 
         counter = lambda array, value: \
             sum(str(data.get(str(i))) == value for i in array)
@@ -279,16 +275,6 @@ def test5(request):
         sinc_res = counter(sinc_q_yes, 'yes') + counter(sinc_q_no, 'no')
         extrav_res = counter(extrav_q_yes, 'yes') + counter(extrav_q_no, 'no')
         neuro_res = counter(neuro_q, 'yes')
-        # for i in sinc_q_yes:
-        #     sinc_res += (str(data.get(str(i))) == 'yes')
-        # for i in sinc_q_no:
-        #     sinc_res += (str(data.get(str(i))) == 'no')
-        # for i in extrav_q_yes:
-        #     extrav_res += (str(data.get(str(i))) == 'yes')
-        # for i in extrav_q_no:
-        #     extrav_res += (str(data.get(str(i))) == 'no')
-        # for i in neuro_q:
-        #     neuro_res += (str(data.get(str(i))) == 'yes')
 
         date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
         Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res,
@@ -332,7 +318,8 @@ def test5(request):
             message[2] += "дискордант"
         else:
             message[2] += "сверхдискордант"
-    return render(request, 'test_page.html', {'test': about_tests['test5'], 'message': '. '.join(message)})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test5'], 'message': '. '.join(message)})
 
 
 @login_required(login_url='login')
@@ -352,7 +339,8 @@ def test6(request):
                    'неприятной вовлеченности (различной по содержанию – это может быть гнев, отвращение, презрение, ' \
                    'вина, страх, раздражительность). Низкий уровень - состояние спокойствия и безмятежности.'
 
-    return render(request, 'test_page.html', {'test': about_tests['test6'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test6'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -375,7 +363,8 @@ def test7(request):
             message += next(ans for scale, ans in answers.items() if number <= scale)
             message += '\n'
 
-    return render(request, 'test_page.html', {'test': about_tests['test7'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test7'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -395,7 +384,8 @@ def test8(request):
             message += 'Переживание уверенности в себе и своих поступках. ' \
                        'Склонность адекватно реагировать на критику и замечания других.' \
                        ' Способность трезво оценивать свои действия'
-    return render(request, 'test_page.html', {'test': about_tests['test8'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test8'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -424,7 +414,8 @@ def test9(request):
             message += next(ans for scale, ans in answers.items() if number <= scale)
             message += '\n\n'
 
-    return render(request, 'test_page.html', {'test': about_tests['test9'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test9'], 'message': message})
 
 
 @login_required(login_url='login')
@@ -455,15 +446,46 @@ def test10(request):
             next(ans for scale, ans in general_resilience.items() if general <= scale)
         )
 
-    return render(request, 'test_page.html', {'test': about_tests['test10'], 'message': message})
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test10'], 'message': message})
 
 
 @login_required(login_url='login')
 def test11(request):
     message = None
     if request.method == 'POST':
-        pass
-    return render(request, 'test_page.html', {'test': about_tests['test11'], 'message': message})
+        data = forms.Form(request.POST).data
+
+        # count answers
+        answers = {i: int(data[str(i)]) - 1 for i in
+                   [3, 7, 11, 12, 20, 23, 24]}
+        answers.update(
+            {i: 4 - int(data[str(i)]) for i in
+             [1, 2, 4, 5, 6, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 21, 22]}
+        )
+
+        # count results
+        general = sum(answers.values())
+        involvement = sum(answers[i] for i in
+                          [2, 3, 4, 8, 11, 12, 15, 19, 20, 21])
+        control = sum(answers[i] for i in
+                      [1, 5, 7, 10, 17, 18, 22, 23])
+        taking_risk = sum(answers[i] for i in
+                          [6, 9, 13, 14, 16, 24])
+
+        counter = lambda minimum, medium, number:\
+            next(mes for num, mes in zip([minimum, medium, float('inf')],
+                                         ['низкий', 'средний', 'высокий'])
+                 if number <= num)
+        message = 'Показатели (актуальный для людей в возрасте 18-75):\n'
+        for name, numbers, value in \
+                zip(['Общий показатель жизнестойкости', 'Вовлеченность', 'Контроль', 'Принятие риска'],
+                    [(39, 62), (17, 27), (12, 21), (8, 15)],
+                    [general, involvement, control, taking_risk]):
+            message += f'{name}: {counter(numbers[0], numbers[1], value)}\n'
+
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test11'], 'message': message})
 
 
 @login_required(login_url='login')
