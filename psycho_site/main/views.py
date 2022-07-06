@@ -156,9 +156,7 @@ def test1(request):
         message = f"Аудиальный канал восприятия: {audio_res}, " \
                   f"Визуальный канал восприятия: {visual_res}, " \
                   f"Кинестетический канал восприятия: {kinest_res}"
-        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
-        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res,
-                             date=date.date(), time=date.time())
+        Test1.objects.create(user=request.user, audio=audio_res, visual=visual_res, kinest=kinest_res)
     return render(request, 'test_page.html',
                   {'test': about_tests['test1'], 'message': message})
 
@@ -177,8 +175,7 @@ def test2(request):
         lt_res = 35 + sum(int(data.get(str(i))) if i in lt
                           else -int(data.get(str(i)))
                           for i in range(21, 41))
-        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
-        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res, date=date.date(), time=date.time())
+        Test2.objects.create(user=request.user, rt=rt_res, lt=lt_res)
 
         if rt_res <= 30:
             message = "Низкая реактивная тревожность"
@@ -205,8 +202,7 @@ def test3(request):
         ud_res = sum(int(data.get(str(i))) if i in ud
                      else 5 - int(data.get(str(i)))
                      for i in range(1, 21))
-        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
-        Test3.objects.create(user=request.user, ud=ud_res, date=date.date(), time=date.time())
+        Test3.objects.create(user=request.user, ud=ud_res)
         if ud_res <= 50:
             message = "У вас отсутствует депрессия"
         elif 51 <= ud_res <= 60:
@@ -240,9 +236,7 @@ def test4(request):
         activity_res = counter(activity_q)
         mood_res = counter(mood_q)
 
-        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
-        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res,
-                             date=date.date(), time=date.time())
+        Test4.objects.create(user=request.user, activity=activity_res, being=being_res, mood=mood_res)
         sum_of_res = activity_res + being_res + mood_res
         a_proc = activity_res / sum_of_res * 100
         b_proc = being_res / sum_of_res * 100
@@ -276,9 +270,7 @@ def test5(request):
         extrav_res = counter(extrav_q_yes, 'yes') + counter(extrav_q_no, 'no')
         neuro_res = counter(neuro_q, 'yes')
 
-        date = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
-        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res,
-                             date=date.date(), time=date.time())
+        Test5.objects.create(user=request.user, sincerity=sinc_res, extrav=extrav_res, neuro=neuro_res)
 
         message = ['', '', '']
         message[0] = "Показатель искренности - " + str(sinc_res) + " из 9, что свидетельствует о"
@@ -338,7 +330,8 @@ def test6(request):
                    'Высокий уровень негативного аффекта – состояние субъективно переживаемого страдания, ' \
                    'неприятной вовлеченности (различной по содержанию – это может быть гнев, отвращение, презрение, ' \
                    'вина, страх, раздражительность). Низкий уровень - состояние спокойствия и безмятежности.'
-
+        Test6.objects.create(user=request.user, positive_effect=positive_effect,
+                             negative_effect=negative_effect)
     return render(request, 'test_page.html',
                   {'test': about_tests['test6'], 'message': message})
 
@@ -362,7 +355,8 @@ def test7(request):
             message += f"{name}:\n"
             message += next(ans for scale, ans in answers.items() if number <= scale)
             message += '\n'
-
+        Test7.objects.create(user=request.user, depression=depression,
+                             anxiety=anxiety, stress=stress)
     return render(request, 'test_page.html',
                   {'test': about_tests['test7'], 'message': message})
 
@@ -372,10 +366,10 @@ def test8(request):
     message = None
     if request.method == 'POST':
         data = forms.Form(request.POST).data
-        result = sum(int(data[str(i)]) for i in [1, 3, 4, 7, 10]) + \
+        self_rating = sum(int(data[str(i)]) for i in [1, 3, 4, 7, 10]) + \
                  sum(3 - int(data[str(i)]) for i in [2, 5, 6, 8, 9])
         message = 'Ваша самооценка на данный момент:\n'
-        if result <= 15:
+        if self_rating <= 15:
             message += 'Ощущение неуверенности в себе. ' \
                        'Болезненное переживание критических замечаний в свой адрес.' \
                        ' Склонность подстраиваться под мнение других людей.' \
@@ -384,6 +378,7 @@ def test8(request):
             message += 'Переживание уверенности в себе и своих поступках. ' \
                        'Склонность адекватно реагировать на критику и замечания других.' \
                        ' Способность трезво оценивать свои действия'
+        Test8.objects.create(user=request.user, self_rating=self_rating)
     return render(request, 'test_page.html',
                   {'test': about_tests['test8'], 'message': message})
 
@@ -413,6 +408,9 @@ def test9(request):
             message += f'{name}:\n'
             message += next(ans for scale, ans in answers.items() if number <= scale)
             message += '\n\n'
+        Test9.objects.create(user=request.user, personal=personal,
+                             eventful=eventful, existential=existential,
+                             general=general)
 
     return render(request, 'test_page.html',
                   {'test': about_tests['test9'], 'message': message})
@@ -445,7 +443,8 @@ def test10(request):
         message += '\n\nИнтерпритация общего показателя благополучия: {}'.format(
             next(ans for scale, ans in general_resilience.items() if general <= scale)
         )
-
+        Test10.objects.create(user=request.user, emotional=emotional,
+                              social=social, psycho=psycho, general=general)
     return render(request, 'test_page.html',
                   {'test': about_tests['test10'], 'message': message})
 
@@ -484,8 +483,47 @@ def test11(request):
                     [general, involvement, control, taking_risk]):
             message += f'{name}: {counter(numbers[0], numbers[1], value)}\n'
 
+        Test11.objects.create(user=request.user, involvement=involvement,
+                              control=control, taking_risk=taking_risk,
+                              general=general)
     return render(request, 'test_page.html',
                   {'test': about_tests['test11'], 'message': message})
+
+
+@login_required(login_url='login')
+def test12(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        values = [int(v) for k, v in data.items() if k.isdigit()]
+        burnout = sum(values)
+        grade, text = next(answer for number, answer in burnout_answers.items()
+                           if burnout <= number).values()
+        message = f'Ваш уровень выгорания: {burnout}/{len(values) * 5}, ' \
+                  f'{grade} уровень.\n{text}'
+        Test12.objects.create(user=request.user, burnout=burnout)
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test12'], 'message': message})
+
+
+@login_required(login_url='login')
+def test13(request):
+    message = None
+    if request.method == 'POST':
+        data = forms.Form(request.POST).data
+        satisfaction = sum(int(data[str(i)]) for i in range(1, 6))
+        # Пункт 9 - обратный
+        happiness = sum(int(data[str(i)]) for i in range(6, 9)) +\
+                    (8 - int(data['9']))
+        message = 'Показатель удовлетворенности жизнью - {}\n' \
+                  'Показатель субъективного счастья - {}'.format(
+            next(grade for number, grade in satisfaction_answers.items() if satisfaction <= number),
+            next(grade for number, grade in happiness_answers.items() if happiness <= number)
+        )
+        Test13.objects.create(user=request.user,
+                              satisfaction=satisfaction, happiness=happiness)
+    return render(request, 'test_page.html',
+                  {'test': about_tests['test13'], 'message': message})
 
 
 @login_required(login_url='login')

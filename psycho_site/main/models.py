@@ -3,43 +3,82 @@ from django.contrib.auth.models import User
 import datetime
 
 
-class Test1(models.Model):
+class BaseTestModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    date = models.DateField(auto_now=True)
+    time = models.TimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Test1(BaseTestModel):
     audio = models.IntegerField()
     visual = models.IntegerField()
     kinest = models.IntegerField()
-    date = models.DateField(default=datetime.date(2021, 7, 20))
-    time = models.TimeField(default=datetime.time(12, 0))
 
 
-class Test2(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+class Test2(BaseTestModel):
     rt = models.IntegerField()
     lt = models.IntegerField()
-    date = models.DateField(default=datetime.date(2021, 7, 20))
-    time = models.TimeField(default=datetime.time(12, 0))
 
 
-class Test3(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+class Test3(BaseTestModel):
     ud = models.IntegerField()
-    date = models.DateField(default=datetime.date(2021, 7, 20))
-    time = models.TimeField(default=datetime.time(12, 0))
 
 
-class Test4(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+class Test4(BaseTestModel):
     activity = models.IntegerField()
     being = models.IntegerField()
     mood = models.IntegerField()
-    date = models.DateField(default=datetime.date(2021, 7, 20))
-    time = models.TimeField(default=datetime.time(12, 0))
 
 
-class Test5(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+class Test5(BaseTestModel):
     sincerity = models.IntegerField()
     extrav = models.IntegerField()
     neuro = models.IntegerField()
-    date = models.DateField(default=datetime.date(2021, 7, 20))
-    time = models.TimeField(default=datetime.time(12, 0))
+
+
+class Test6(BaseTestModel):
+    positive_effect = models.IntegerField()
+    negative_effect = models.IntegerField()
+
+
+class Test7(BaseTestModel):
+    depression = models.IntegerField()
+    anxiety = models.IntegerField()
+    stress = models.IntegerField()
+
+
+class Test8(BaseTestModel):
+    self_rating = models.IntegerField()
+
+
+class Test9(BaseTestModel):
+    personal = models.IntegerField()
+    eventful = models.IntegerField()
+    existential = models.IntegerField()
+    general = models.IntegerField()
+
+
+class Test10(BaseTestModel):
+    emotional = models.IntegerField()
+    social = models.IntegerField()
+    psycho = models.IntegerField()
+    general = models.IntegerField()
+
+
+class Test11(BaseTestModel):
+    involvement = models.IntegerField()
+    control = models.IntegerField()
+    taking_risk = models.IntegerField()
+    general = models.IntegerField()
+
+
+class Test12(BaseTestModel):
+    burnout = models.IntegerField()
+
+
+class Test13(BaseTestModel):
+    satisfaction = models.IntegerField()
+    happiness = models.IntegerField()

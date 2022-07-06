@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import *
+from . import models
+from inspect import getmembers, isclass
+from django.conf import settings
+import re
 
-
-admin.site.register(Test1)
-admin.site.register(Test2)
-admin.site.register(Test3)
-admin.site.register(Test4)
-admin.site.register(Test5)
+if settings.DEBUG:
+    for name, cls in getmembers(models, isclass):
+        if re.match(r'Test\d+', name) is not None:
+            admin.site.register(cls)
