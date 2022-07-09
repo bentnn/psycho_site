@@ -43,7 +43,7 @@ def statistics(request):
     graph4 = None
     graph5 = None
     if tests[0]:
-        graph1 = [return_graph1_1(tests[0]), return_graph1_2(tests[0])]
+        graph1 = [lines_graph(tests[0]), return_graph1_2(tests[0])]
     if tests[1]:
         graph2 = [return_graph2_1(tests[1]), return_graph2_2(tests[1])]
     if tests[2]:

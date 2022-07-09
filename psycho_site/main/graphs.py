@@ -1,18 +1,49 @@
 import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
+from .models import *
 
 
 def graph_settings(ax, x, y, s):
-    x_l = [i + 1 for i in x]
     ax.set_ylim(ymin=0)
     ax.set_xlim(xmin=0)
     axis = plt.gca()
-    axis.axes.xaxis.set_ticklabels(x_l)
     plt.xticks(x)
     plt.yticks(np.arange(0, max(y) + 1, s))
     plt.style.use('bmh')
 
+
+def graph_settings2(ax, values, s):
+    ax.set_ylim(ymin=0)
+    ax.set_xlim(xmin=0)
+    axis = plt.gca()
+
+    plt.xticks([i for i, value in enumerate(next(i for i in values))])
+    maximum_y = max(max(i) for i in values) + 5
+    print(maximum_y)
+    plt.yticks(np.arange(0, maximum_y, s))
+    plt.style.use('bmh')
+
+
+def lines_graph(test_results):
+    base_values = [*BaseTestModel.__dict__.keys(), '_state', 'id']
+    graph_values = {name: [] for name in test_results[0].__dict__ if name not in base_values}
+    for i in test_results:
+        for name in graph_values:
+            graph_values[name].append(i.__getattribute__(name))
+    fig, ax = plt.subplots(1, figsize=(8, 6))
+    # graph_settings(ax, [i for i, t in enumerate(test_results)], [20], 5.0)
+    graph_settings2(ax, graph_values.values(), 5.0)
+    for name, value in graph_values.items():
+        ax.plot(value, alpha=0.5, linewidth=3, marker='o', label=name)
+    ax.grid()
+    ax.legend(loc='upper left')
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg', transparent=True)
+    imgdata.seek(0)
+
+    data = imgdata.getvalue()
+    return data
 
 def return_graph1_1(array):  # Первый график первого теста, три линии на одном
     x = []
@@ -26,11 +57,11 @@ def return_graph1_1(array):  # Первый график первого тест
         y3.append(i.kinest)
 
     fig, ax = plt.subplots(1, figsize=(8, 6))
-    fig.set_size_inches(7, 6)
     graph_settings(ax, x, y1, 1.0)
     ax.plot(y1, color="aqua", alpha=0.5, linewidth=3, marker='o')
     ax.plot(y2, color="blueviolet", alpha=0.5, linewidth=3, marker='o')
     ax.plot(y3, color="coral", alpha=0.5, linewidth=3, marker='o')
+    ax.grid()
     # alpha отвечает за прозрачность(уменьшять в десятичных), linewidth за толщину, увеличивать единицами
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
