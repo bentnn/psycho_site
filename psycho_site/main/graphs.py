@@ -19,8 +19,7 @@ def graph_settings2(ax, values, s):
     axis = plt.gca()
 
     plt.xticks([i for i, value in enumerate(next(i for i in values))])
-    maximum_y = max(max(i) for i in values) + 5
-    print(maximum_y)
+    maximum_y = max(max(i) for i in values) + 10
     plt.yticks(np.arange(0, maximum_y, s))
     plt.style.use('bmh')
 
@@ -45,6 +44,7 @@ def lines_graph(test_results):
     data = imgdata.getvalue()
     return data
 
+
 def return_graph1_1(array):  # Первый график первого теста, три линии на одном
     x = []
     y1 = []
@@ -63,6 +63,28 @@ def return_graph1_1(array):  # Первый график первого тест
     ax.plot(y3, color="coral", alpha=0.5, linewidth=3, marker='o')
     ax.grid()
     # alpha отвечает за прозрачность(уменьшять в десятичных), linewidth за толщину, увеличивать единицами
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg', transparent=True)
+    imgdata.seek(0)
+
+    data = imgdata.getvalue()
+    return data
+
+
+def pie_graph(test_results):
+    base_values = [*BaseTestModel.__dict__.keys(), '_state', 'id']
+    graph_values = {name: 0 for name in test_results[0].__dict__ if name not in base_values}
+    for res in test_results:
+        for name in graph_values:
+            graph_values[name] += getattr(res, name)
+    res_len = len(test_results)
+    for name in graph_values:
+        graph_values[name] /= res_len
+
+    fig, ax = plt.subplots()
+    ax.pie(graph_values.values(), autopct="%.2f%%", explode=[0.1 for _ in graph_values], labels=graph_values.keys())
+    ax.legend(loc='upper left')
+
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg', transparent=True)
     imgdata.seek(0)

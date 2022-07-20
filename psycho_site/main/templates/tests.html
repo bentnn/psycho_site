@@ -12,7 +12,7 @@
 			{% for name, about in tests.items %}
             <div class="col">
                 <div class="card border-dark">
-					<img src="{% static 'main/'|add:about.image %}">
+					<img src="{% static 'main/'|add:about.image %}" style="max-width: 500px">
                     <div class="card-body">
                         <h5 class="card-title">{{ about.name }}</h5>
                         <p class="card-text">{{ about.info }}</p>
