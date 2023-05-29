@@ -1,6 +1,7 @@
 from django.urls import path
 from .psycho_tests import about_tests
 from . import views
+from . import routes
 
 
 urlpatterns = [
@@ -16,6 +17,9 @@ urlpatterns = [
     path('tests', views.tests, name='tests'),
     path('staffroom', views.staffroom, name='staffroom'),
     path('download_emails', views.download_emails, name='download_emails'),
+
+    # api
+    path('api', routes.TestsApi.as_view()),
 
     # tests pages
     *[path(name, getattr(views, name), name=name) for name in about_tests.keys()]
