@@ -31,8 +31,16 @@
                             <label for="exampleFormControlInput1" class="form-label">Адрес электронной почты</label>
                             <input type="email" class="form-control" name="email" id="exampleFormControlInput1" value="{{ request.user.email }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Telegram ID</label>
+                            <input type="number" class="form-control" name="telegram_id" id="exampleFormControlInput1" value="{{ telegram_id }}">
+                        </div>
                         <button type="submit" class="btn btn-dark">Сохранить</button>
                     </form>
+                    {% if message %}
+                        <br>
+                        <p class="fw-bold">{{ message }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

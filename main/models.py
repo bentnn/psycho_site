@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
 
 
 class BaseTestModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     date = models.DateField(auto_now=True)
     time = models.TimeField(auto_now=True)
+    via_telegram = models.BooleanField(default=False)
 
     class Meta:
         abstract = True

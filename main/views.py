@@ -5,6 +5,8 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, Us
 from django import forms
 from .psycho_tests import about_tests
 from .models import *
+from rest.models import UserTelegramID
+from rest.views import get_user_telegram
 from .graphs import *
 from .mail_sendler import send_mail
 from .test_counters import *
@@ -27,7 +29,9 @@ def tests(request):
 
 @login_required(login_url='login')
 def account(request):
-    return render(request, 'account.html', {'cur_page': 'account'})
+    user_telegram_id = get_user_telegram(user=request.user)
+    user_telegram_id = user_telegram_id.telegram_id if user_telegram_id else None
+    return render(request, 'account.html', {'cur_page': 'account', 'telegram_id': user_telegram_id})
 
 
 @login_required(login_url='login')
@@ -127,7 +131,27 @@ def change_password(request):
 
 @login_required(login_url='login')
 def change_info(request):
+    user_telegram = get_user_telegram(user=request.user)
+    user_telegram_id = user_telegram.telegram_id if user_telegram else None
+
     if request.method == 'POST':
+        telegram_id = request.POST.get('telegram_id')
+        if telegram_id:
+            telegram_id = int(telegram_id)
+            if user_telegram_id != telegram_id and UserTelegramID.objects.filter(telegram_id=telegram_id).exists():
+                return render(request, 'change_info.html',
+                              {'telegram_id': user_telegram_id,
+                               'message': f'Telegram ID "{telegram_id}" уже привязан к другому аккаунту на сайте. '
+                                          f'Отвяжите его перед привязкой к этому. '
+                                          f'Если ID привязан к аккаунту, к которому у вас нет доступа, '
+                                          f'вы можете отвязать его в telegram боте через пользователя с этим ID.'})
+            if user_telegram:
+                user_telegram.telegram_id = telegram_id
+                user_telegram.save()
+            else:
+                UserTelegramID.objects.create(user=request.user, telegram_id=telegram_id)
+        elif user_telegram:
+            user_telegram.delete()
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
@@ -136,8 +160,7 @@ def change_info(request):
         request.user.email = email
         request.user.save()
         return redirect('account')
-
-    return render(request, 'change_info.html')
+    return render(request, 'change_info.html', {'telegram_id': user_telegram_id})
 
 
 @login_required(login_url='login')

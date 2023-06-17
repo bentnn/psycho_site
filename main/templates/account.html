@@ -34,6 +34,16 @@
                 <p>Электронная почта потребуется в случае, если вы забудете пароль к этому сайту.</p>
             {% endif %}
         </p>
+
+        <p class="fw-bold regular_text">Telegram ID:</p>
+        <p>
+            {% if telegram_id %}
+                {{ telegram_id }}
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <p>ID используется для связи вашего аккаунта на сайте с telegram ботом.</p>
         <br>
             <p><a style="width: 300px" class="btn btn-outline-dark" href="{% url 'change_info' %}">Изменить персональные данные</a></p>
             <p><a style="width: 300px" class="btn btn-outline-dark" href="{% url 'change_password' %}">Сменить пароль</a></p>
