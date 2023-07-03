@@ -2,11 +2,14 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
 from main.psycho_tests import about_tests
+from main import test_counters
 from rest.models import UserTelegramID
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAdminUser
+import main.models as tests_models
 
 short_about_test = {
     test_name: {
@@ -58,3 +61,37 @@ class TelegramIDApi(BaseTelegramRest):
             return Response(status=200)
         else:
             return Response(status=404)
+
+
+class PassTestApi(BaseTelegramRest):
+
+    def post(self, request: Request, telegram_id, test_name, *args, **kwargs):
+        user_telegram = get_user_telegram(telegram_id=telegram_id)
+        if not user_telegram:
+            return Response('Unknown user', status=404)
+        if test_name not in about_tests:
+            return Response(f'Unknown test {test_name}', status=404)
+        data = request.data
+        print(data)
+        msg = getattr(test_counters, f'count_{test_name}')({str(n): i for n, i in enumerate(data, start=1)},
+                                                             user=user_telegram.user, via_telegram=True)
+        return Response(msg, status=200)
+
+
+class GetStatsApi(BaseTelegramRest):
+
+    def get(self, request: Request, telegram_id, test_name, *args, **kwargs):
+
+        def create_test_stats_resp(name_of_test) -> dict:
+            test_stats = about_tests[name_of_test].model.objects.filter(user=user_telegram.user).all()
+            return {about_tests[name_of_test]['name']: {f'{i["date"]} {i["time"]}': i['message'] for i in test_stats}}
+
+        user_telegram = get_user_telegram(telegram_id=telegram_id)
+        if not user_telegram:
+            return Response('Unknown user', status=404)
+        if test_name == 'all':
+            return Response(dict.fromkeys(create_test_stats_resp(i) for i in about_tests), status=200)
+        elif test_name in about_tests:
+            return Response(create_test_stats_resp(test_name), status=200)
+        else:
+            return Response(f'Unknown test {test_name}', status=404)

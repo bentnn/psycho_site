@@ -1,7 +1,8 @@
 from .models import *
 from .test_answers import *
 
-def count_test_1(data, user, via_telegram=False):
+
+def count_test1(data, user, via_telegram=False):
     audio = [2, 6, 7, 13, 15, 17, 20, 24, 26, 33, 34, 36, 37, 43, 46, 48]
     visual = [1, 5, 8, 10, 12, 14, 19, 21, 23, 27, 31, 32, 39, 40, 42, 45]
     kinest = [3, 4, 9, 11, 16, 18, 22, 25, 28, 29, 30, 35, 38, 41, 44, 47]
@@ -19,7 +20,7 @@ def count_test_1(data, user, via_telegram=False):
     return message
 
 
-def count_test_2(data, user, via_telegram=False):
+def count_test2(data, user, via_telegram=False):
     rt = [3, 4, 6, 7, 9, 12, 13, 14, 17, 18]
     lt = [22, 23, 24, 25, 28, 29, 31, 32, 34, 35, 37, 38, 40]
 
@@ -46,7 +47,7 @@ def count_test_2(data, user, via_telegram=False):
     return message
 
 
-def count_test_3(data, user, via_telegram=False):
+def count_test3(data, user, via_telegram=False):
     ud = [1, 3, 4, 7, 8, 9, 10, 13, 15, 19]
     ud_res = sum(int(data.get(str(i))) if i in ud
                  else 5 - int(data.get(str(i)))
@@ -65,7 +66,7 @@ def count_test_3(data, user, via_telegram=False):
     return message
 
 
-def count_test_4(data, user, via_telegram=False):
+def count_test4(data, user, via_telegram=False):
     being_q = [1, 2, 7, 8, 13, 14, 19, 20, 25, 26]
     activity_q = [3, 4, 9, 10, 15, 16, 21, 22, 27, 28]
     mood_q = [5, 6, 11, 12, 17, 18, 23, 24, 29, 30]
@@ -97,7 +98,7 @@ def count_test_4(data, user, via_telegram=False):
     return message
 
 
-def count_test_5(data, user, via_telegram=False):
+def count_test5(data, user, via_telegram=False):
     sinc_q_yes = [6, 24, 36]
     sinc_q_no = [12, 18, 30, 42, 48, 54]
     extrav_q_yes = [1, 3, 8, 10, 13, 17, 22, 27, 39, 44, 46, 49, 53, 56]
@@ -156,7 +157,7 @@ def count_test_5(data, user, via_telegram=False):
     return message
 
 
-def count_test_6(data, user, via_telegram=False):
+def count_test6(data, user, via_telegram=False):
 
     def count_message_test6(effect: int, low: int, middle: int,
                             name_of_effect: str):
@@ -184,7 +185,7 @@ def count_test_6(data, user, via_telegram=False):
     return message
 
 
-def count_test_7(data, user, via_telegram=False):
+def count_test7(data, user, via_telegram=False):
     counter = lambda array: sum(int(data[str(i)]) for i in array)
     depression = counter([3, 5, 10, 13, 16, 17, 21])
     anxiety = counter([2, 4, 7, 9, 15, 19, 20])
@@ -203,7 +204,7 @@ def count_test_7(data, user, via_telegram=False):
     return message
 
 
-def count_test_8(data, user, via_telegram=False):
+def count_test8(data, user, via_telegram=False):
     self_rating = sum(int(data[str(i)]) for i in [1, 3, 4, 7, 10]) + \
                   sum(3 - int(data[str(i)]) for i in [2, 5, 6, 8, 9])
     message = 'Ваша самооценка на данный момент:\n'
@@ -220,7 +221,7 @@ def count_test_8(data, user, via_telegram=False):
     return message
 
 
-def count_test_9(data, user, via_telegram=False):
+def count_test9(data, user, via_telegram=False):
     # восходящие
     answers = {i: int(data[str(i)]) for i in [2, 6, 8, 9, 10]}
     # нисходящие
@@ -247,7 +248,7 @@ def count_test_9(data, user, via_telegram=False):
     return message
 
 
-def count_test_10(data, user, via_telegram=False):
+def count_test10(data, user, via_telegram=False):
     emotional = sum(int(data[str(i)]) for i in range(1, 4))
     social = sum(int(data[str(i)]) for i in range(4, 9))
     psycho = sum(int(data[str(i)]) for i in range(9, 15))
@@ -275,7 +276,7 @@ def count_test_10(data, user, via_telegram=False):
     return message
 
 
-def count_test_11(data, user, via_telegram=False):
+def count_test11(data, user, via_telegram=False):
     # count answers
     answers = {i: int(data[str(i)]) - 1 for i in [3, 7, 11, 12, 20, 23, 24]}
     answers.update(
@@ -308,7 +309,7 @@ def count_test_11(data, user, via_telegram=False):
     return message
 
 
-def count_test_12(data, user, via_telegram=False):
+def count_test12(data, user, via_telegram=False):
     values = [int(v) for k, v in data.items() if k.isdigit()]
     burnout = sum(values)
     grade, text = next(answer for number, answer in burnout_answers.items()
@@ -319,7 +320,7 @@ def count_test_12(data, user, via_telegram=False):
     return message
 
 
-def count_test_13(data, user, via_telegram=False):
+def count_test13(data, user, via_telegram=False):
     satisfaction = sum(int(data[str(i)]) for i in range(1, 6))
     # Пункт 9 - обратный
     happiness = sum(int(data[str(i)]) for i in range(6, 9)) + (8 - int(data['9']))
