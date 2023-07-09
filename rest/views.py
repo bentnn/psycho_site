@@ -83,8 +83,8 @@ class GetStatsApi(BaseTelegramRest):
     def get(self, request: Request, telegram_id, test_name, *args, **kwargs):
 
         def create_test_stats_resp(name_of_test) -> dict:
-            test_stats = about_tests[name_of_test].model.objects.filter(user=user_telegram.user).all()
-            return {about_tests[name_of_test]['name']: {f'{i["date"]} {i["time"]}': i['message'] for i in test_stats}}
+            test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).all()
+            return {about_tests[name_of_test]['name']: {f'{i.date} {i.time}': i.message for i in test_stats}}
 
         user_telegram = get_user_telegram(telegram_id=telegram_id)
         if not user_telegram:
