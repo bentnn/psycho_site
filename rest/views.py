@@ -83,14 +83,17 @@ class GetStatsApi(BaseTelegramRest):
     def get(self, request: Request, telegram_id, test_name, *args, **kwargs):
 
         def create_test_stats_resp(name_of_test) -> dict:
-            test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).all()
+            test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).order_by('-id')[:5][::-1]
             return {about_tests[name_of_test]['name']: {f'{i.date} {i.time}': i.message for i in test_stats}}
 
         user_telegram = get_user_telegram(telegram_id=telegram_id)
         if not user_telegram:
             return Response('Unknown user', status=404)
         if test_name == 'all':
-            return Response(dict.fromkeys(create_test_stats_resp(i) for i in about_tests), status=200)
+            res = {}
+            for i in about_tests:
+                res.update(create_test_stats_resp(i))
+            return Response(res, status=200)
         elif test_name in about_tests:
             return Response(create_test_stats_resp(test_name), status=200)
         else:
