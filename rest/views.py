@@ -9,7 +9,7 @@ from main import test_counters
 from rest.models import UserTelegramID
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAdminUser
-import main.models as tests_models
+from main.models import BaseTestModel
 
 short_about_test = {
     test_name: {
@@ -83,8 +83,21 @@ class GetStatsApi(BaseTelegramRest):
     def get(self, request: Request, telegram_id, test_name, *args, **kwargs):
 
         def create_test_stats_resp(name_of_test) -> dict:
-            test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).order_by('-id')[:5][::-1]
-            return {about_tests[name_of_test]['name']: {f'{i.date} {i.time}': i.message for i in test_stats}}
+
+            def get_about_test_info(test_object, message: str = None):
+                return {
+                    'message': message,
+                    'result': {test_object._meta.get_field(i).verbose_name: getattr(test_object, i) for i in about_tests[name_of_test]['model'].resulting_fields}
+                }
+
+            test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).order_by('-id')[:20]
+            # test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).order_by('-id')[:20][::-1]
+            # verbose_name
+            res = {f'{i.date} {i.time}': get_about_test_info(i, message=i.message) for i in test_stats[:5]}
+            res.update((f'{i.date} {i.time}', get_about_test_info(i, message=None)) for i in test_stats[5:])
+
+            return res
+            # return {about_tests[name_of_test]['name']: {f'{i.date} {i.time}': i.message for i in test_stats}}
 
         user_telegram = get_user_telegram(telegram_id=telegram_id)
         if not user_telegram:

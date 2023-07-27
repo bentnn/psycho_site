@@ -120,7 +120,7 @@ def count_test5(data, user, via_telegram=False):
         message[0] += " ситуативности"
     else:
         message[0] += " лживости"
-    message[1] = "Показатель экстравертности - " + str(extrav_res) + " из 24. Это означает, что вы "
+    message[1] = "Показатель экстровертности - " + str(extrav_res) + " из 24. Это означает, что вы "
     if extrav_res <= 2:
         message[1] += "сверхинтроверт"
     elif 3 <= extrav_res <= 6:
