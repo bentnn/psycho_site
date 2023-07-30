@@ -96,7 +96,7 @@ class GetStatsApi(BaseTelegramRest):
             res = {f'{i.date} {i.time}': get_about_test_info(i, message=i.message) for i in test_stats[:5]}
             res.update((f'{i.date} {i.time}', get_about_test_info(i, message=None)) for i in test_stats[5:])
 
-            return res
+            return {about_tests[name_of_test]['name']: res}
             # return {about_tests[name_of_test]['name']: {f'{i.date} {i.time}': i.message for i in test_stats}}
 
         user_telegram = get_user_telegram(telegram_id=telegram_id)
@@ -105,7 +105,10 @@ class GetStatsApi(BaseTelegramRest):
         if test_name == 'all':
             res = {}
             for i in about_tests:
-                res.update(create_test_stats_resp(i))
+                test_res = create_test_stats_resp(i)
+                # проверка, что результаты были найдены
+                if test_res[about_tests[i]['name']]:
+                    res.update(test_res)
             return Response(res, status=200)
         elif test_name in about_tests:
             return Response(create_test_stats_resp(test_name), status=200)
