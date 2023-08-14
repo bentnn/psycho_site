@@ -74,7 +74,7 @@ class PassTestApi(BaseTelegramRest):
         data = request.data
         print(data)
         msg = getattr(test_counters, f'count_{test_name}')({str(n): i for n, i in enumerate(data, start=1)},
-                                                             user=user_telegram.user, via_telegram=True)
+                                                           user=user_telegram.user, via_telegram=True)
         return Response(msg, status=200)
 
 
@@ -87,7 +87,7 @@ class GetStatsApi(BaseTelegramRest):
             def get_about_test_info(test_object, message: str = None):
                 return {
                     'message': message,
-                    'result': {test_object._meta.get_field(i).verbose_name: getattr(test_object, i) for i in about_tests[name_of_test]['model'].resulting_fields}
+                    'result': {test_object._meta.get_field(j).verbose_name: getattr(test_object, j) for j in about_tests[name_of_test]['model'].resulting_fields}
                 }
 
             test_stats = about_tests[name_of_test]['model'].objects.filter(user=user_telegram.user).order_by('-id')[:20]
@@ -114,3 +114,18 @@ class GetStatsApi(BaseTelegramRest):
             return Response(create_test_stats_resp(test_name), status=200)
         else:
             return Response(f'Unknown test {test_name}', status=404)
+
+
+class TelAllTgIds(BaseTelegramRest):
+
+    def get(self, request: Request, *args, **kwargs):
+        all_ids = UserTelegramID.objects.all()
+        return Response([i.telegram_id for i in all_ids], status=200)
+
+
+class WhoDoesntPassTest(BaseTelegramRest):
+    def get(self, request: Request, test_name: str, days: int, *args, **kwargs):
+        if test_name not in about_tests:
+            return Response(f'Unknown test {test_name}', status=404)
+        all_ids = UserTelegramID.objects.all()
+        about_tests[test_name]['model'].objects.filter().all()
