@@ -10,6 +10,7 @@ from rest.models import UserTelegramID
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAdminUser
 from main.models import BaseTestModel
+import logging
 
 short_about_test = {
     test_name: {
@@ -120,6 +121,7 @@ class TelAllTgIds(BaseTelegramRest):
 
     def get(self, request: Request, *args, **kwargs):
         all_ids = UserTelegramID.objects.all()
+        logging.info('Len of all tg ids: ' + str(len(all_ids)))
         return Response([i.telegram_id for i in all_ids], status=200)
 
 
