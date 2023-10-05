@@ -19,4 +19,5 @@ def main():
 
 
 if __name__ == '__main__':
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
     main()
