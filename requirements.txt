@@ -1,4 +1,4 @@
-Django==4.2.1
+Django==3.2.22
 djangorestframework==3.14.0
 django-crispy-forms==1.14.0
 matplotlib==3.5.1
