@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
@@ -130,4 +132,7 @@ class WhoDoesntPassTest(BaseTelegramRest):
         if test_name not in about_tests:
             return Response(f'Unknown test {test_name}', status=404)
         all_ids = UserTelegramID.objects.all()
-        about_tests[test_name]['model'].objects.filter().all()
+        from_day = datetime.date.today() - datetime.timedelta(days=days)
+        users = about_tests[test_name]['model'].objects.filter(user__in=[u_id.user for u_id in all_ids], date__gte=from_day).only('user').all()
+        users = {user.user.id for user in users}
+        return Response([user.telegram_id for user in all_ids if user.user.id not in users], status=200)
